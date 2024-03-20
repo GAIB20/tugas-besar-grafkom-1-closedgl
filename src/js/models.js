@@ -13,13 +13,9 @@ class Shape {
 
   scale(x, y) {}
 
-  onRendupdateLastVertexPositionerMove(x, y) {}
+  updateLastVertexPosition(x, y) {}
 
   renderShape(program) {} // render shape using GL
-
-  setCentroid() {
-    this.centroid = centroid(this.vertices);
-  }
 
   /**
    * Set colors of each vertices of the shape
@@ -47,7 +43,13 @@ class Line extends Shape {
 
   scale(x, y) {}
 
-  renderShape(program) {}
+  renderShape(program) { 
+    renderVertex(program, flattenMatrix(this.vertices), 2);
+    renderColor(program, flattenMatrix(this.colors), 4);
+    for (let i = 0; i < this.vertices.length; i += 2) {
+      gl.drawArrays(gl.LINES, i, 2);
+    }
+  }
 
   updateLastVertexPosition(x, y) {
     let len = this.vertices.length;
