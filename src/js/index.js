@@ -14,6 +14,7 @@ const SHAPE = {
 let isDrawing = false;
 let currentSelectedShape = null;
 let isFocusingCanvas = false;
+let keyPressed = false;
 let shapes = {
   line: [],
   square: [],
@@ -67,6 +68,16 @@ drawLineBtn.addEventListener("click", () => {
   }
 });
 
+let drawPolygonBtn = document.getElementById("polygon");
+drawPolygonBtn.addEventListener("click", () => {
+  if (!isDrawing) {
+    currentSelectedShape = SHAPE.POLYGON;
+    isDrawing = true;
+  } else {
+    alert("Click finish drawing before start another one");
+  }
+});
+
 /**
  * Canvas event listener
  * */
@@ -87,7 +98,30 @@ canvas.addEventListener("mousedown", (e) => {
 
 canvas.addEventListener("mouseup", () => {
   isFocusingCanvas = false;
-  console.log(shapes)
+  console.log(shapes);
+
+  if (currentSelectedShape === SHAPE.POLYGON) {
+    polygonStopDrawing(shapes, currentSelectedShape, shapes.polygon.length - 1);
+  }
+});
+
+document.addEventListener("keydown", (e) => {
+  if (!keyPressed && isFocusingCanvas) {
+    if (currentSelectedShape === SHAPE.POLYGON) {
+      if (e.code === "Backspace") {
+        const { x, y } = getCursorPosition(canvas, e);
+        onBackspaceRemovePolygonVertex(shapes, currentSelectedShape, x, y);
+      } else if (e.code === "Enter") {
+        onEnterAddPolygonVertex(shapes, currentSelectedShape);
+      }
+    }
+
+    keyPressed = true;
+  }
+});
+
+document.addEventListener("keyup", (e) => {
+  keyPressed = false;
 });
 
 /**

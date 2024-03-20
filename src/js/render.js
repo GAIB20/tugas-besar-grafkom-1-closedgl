@@ -92,6 +92,10 @@ const drawShape = (currShapes, shapeType, x, y) => {
       currShapes.line.push(new Line(x, y));
       break;
 
+    case SHAPE.POLYGON:
+      currShapes.polygon.push(new Polygon(x, y));
+      break;
+
     default:
       break;
   }

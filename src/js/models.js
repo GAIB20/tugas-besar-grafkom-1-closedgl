@@ -118,6 +118,7 @@ class Polygon extends Shape {
   constructor(x, y) {
     super();
 
+    // flags to indicate if polygon is still in drawing mode (initialization)
     this.isAddingVertex = true;
 
     // start as line
@@ -142,14 +143,13 @@ class Polygon extends Shape {
     }
   }
 
-  startAddVertex() {
-    this.isAddingVertex = true;
+  stopDrawing() {
+    this.isAddingVertex = false;
+    this.recalculatePolygon()
   }
 
-  stopAddVertex() {
+  recalculatePolygon() {
     // todo: recalculate convex hull
-    this.isAddingVertex = false;
-
     this.centroid = calculateCentroid(this.vertices);
   }
 

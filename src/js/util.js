@@ -1,7 +1,7 @@
 /**
  * Flatten the given matrix
  * @returns Float32Array
- * */ 
+ * */
 const flattenMatrix = (matrix) => {
   if (Array.isArray(matrix[0])) {
     return new Float32Array(matrix.flat());
@@ -30,24 +30,24 @@ const parseRGB = (rgb) => {
   return { r, g, b };
 };
 
-// /**
-//  * Get the centroid from the given matrix shape
-//  * */
-// const getCentroid = (matrix) => {
-//   let x = 0;
-//   let y = 0;
-//   let totalVertex = matrix.length;
+/**
+ * Get the centroid from the given matrix shape
+ * */
+const calculateCentroid = (matrix) => {
+  let x = 0;
+  let y = 0;
+  let totalVertex = matrix.length;
 
-//   for (i = 0; i < totalVertex; i++) {
-//     x += matrix[i][0];
-//     y += matrix[i][1];
-//   }
+  for (i = 0; i < totalVertex; i++) {
+    x += matrix[i][0];
+    y += matrix[i][1];
+  }
 
-//   x = x / totalVertex;
-//   y = y / totalVertex;
+  x = x / totalVertex;
+  y = y / totalVertex;
 
-//   return [x, y];
-// };
+  return [x, y];
+};
 
 /**
  * Returns user current cursor position
@@ -84,4 +84,53 @@ const onMouseMove = (currShapes, shapeType, x, y) => {
       wglHeight
     );
   }
+
+  if (shapeType === SHAPE.POLYGON) {
+    const len = currShapes[SHAPE.POLYGON].length;
+    currShapes[SHAPE.POLYGON][len - 1].updateLastVertexPosition(
+      wglWidth,
+      wglHeight
+    );
+    return;
+  }
+};
+
+/**
+ * Polygon utils
+ * used for drawing of polygon
+ */
+const onEnterAddPolygonVertex = (currShapes, shapeType, x, y) => {
+  if (shapeType !== SHAPE.POLYGON) {
+    return;
+  }
+
+  let [wglWidth, wglHeight] = convertToWGLCoordinate(canvas, x, y);
+
+  const len = currShapes[SHAPE.POLYGON].length;
+  if (currShapes[SHAPE.POLYGON][len - 1].isAddingVertex) {
+    currShapes[SHAPE.POLYGON][len - 1].addVertex(wglWidth, wglHeight);
+  }
+};
+
+const onBackspaceRemovePolygonVertex = (currShapes, shapeType) => {
+  if (shapeType !== SHAPE.POLYGON) {
+    return;
+  }
+
+  const len = currShapes[SHAPE.POLYGON].length;
+  if (
+    currShapes[SHAPE.POLYGON][len - 1].vertices.length > 2 &&
+    currShapes[SHAPE.POLYGON][len - 1].isAddingVertex
+  ) {
+    currShapes[SHAPE.POLYGON][len - 1].removeLastVertex();
+  }
+};
+
+const polygonStopDrawing = (currShapes, shapeType) => {
+  if (shapeType !== SHAPE.POLYGON) {
+    return;
+  }
+
+  const len = currShapes[SHAPE.POLYGON].length;
+  currShapes[SHAPE.POLYGON][len - 1].stopDrawing();
 };
