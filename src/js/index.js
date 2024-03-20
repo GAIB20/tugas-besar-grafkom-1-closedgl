@@ -98,11 +98,11 @@ canvas.addEventListener("mousedown", (e) => {
 
 canvas.addEventListener("mouseup", () => {
   isFocusingCanvas = false;
-  console.log(shapes);
 
   if (currentSelectedShape === SHAPE.POLYGON) {
-    polygonStopDrawing(shapes, currentSelectedShape, shapes.polygon.length - 1);
+    polygonStopDrawing(shapes, currentSelectedShape);
   }
+  console.log(shapes);
 });
 
 document.addEventListener("keydown", (e) => {
