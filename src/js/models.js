@@ -43,7 +43,7 @@ class Line extends Shape {
 
   scale(x, y) {}
 
-  renderShape(program) { 
+  renderShape(program) {
     renderVertex(program, flattenMatrix(this.vertices), 2);
     renderColor(program, flattenMatrix(this.colors), 4);
     for (let i = 0; i < this.vertices.length; i += 2) {
@@ -61,10 +61,10 @@ class Line extends Shape {
 class Square extends Shape {
   constructor(x, y) {
     super();
-    
+
     // TODO: change this constant
     const SQ_DEFAULT_SIZE = 100;
-    
+
     let _vertices = [];
     let _colors = [];
     _vertices.push(convertToWGLCoordinate(canvas, x, y));
@@ -98,7 +98,7 @@ class Rectangle extends Shape {
       this.colors = [[0, 0, 0, 1]];
     }
   }
-  
+
   translate(x, y) {}
 
   scale(x, y) {}
@@ -115,13 +115,55 @@ class Rectangle extends Shape {
 }
 
 class Polygon extends Shape {
-  constructor(polyPoints) {
+  constructor(x, y) {
     super();
+
+    this.isAddingVertex = true;
+
+    // start as line
+    for (let i = 0; i < 2; i++) {
+      this.vertices.push(convertToWGLCoordinate(canvas, x, y));
+    }
+    this.colors = [[0, 0, 0, 1]];
   }
 
   translate(x, y) {}
 
   scale(x, y) {}
 
-  renderShape(program) {}
+  renderShape(program) {
+    renderVertex(program, flattenMatrix(this.vertices), 2);
+    renderColor(program, flattenMatrix(this.colors), 4);
+
+    if (this.isAddingVertex) {
+      gl.drawArrays(gl.LINE_STRIP, 0, this.vertices.length);
+    } else {
+      gl.drawArrays(gl.TRIANGLE_FAN, 0, this.vertices.length);
+    }
+  }
+
+  startAddVertex() {
+    this.isAddingVertex = true;
+  }
+
+  stopAddVertex() {
+    // todo: recalculate convex hull
+    this.isAddingVertex = false;
+
+    this.centroid = calculateCentroid(this.vertices);
+  }
+
+  addVertex(x, y) {
+    this.vertices.push(convertToWGLCoordinate(canvas, x, y));
+  }
+
+  removeLastVertex() {
+    this.vertices.pop();
+  }
+
+  updateLastVertexPosition(x, y) {
+    let len = this.vertices.length;
+    this.vertices[len - 1][0] = x;
+    this.vertices[len - 1][1] = y;
+  }
 }
