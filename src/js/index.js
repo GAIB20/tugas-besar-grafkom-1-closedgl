@@ -85,7 +85,7 @@ drawLineBtn.addEventListener("click", () => {
     currentSelectedShape = SHAPE.LINE;
     isDrawing = true;
   } else {
-    alert("Click finish drawing before start another one");
+    alert("Click finish drawing before starting another one");
   }
 });
 
@@ -95,7 +95,17 @@ drawSquareBtn.addEventListener("click", () => {
     currentSelectedShape = SHAPE.SQUARE;
     isDrawing = true;
   } else {
-    alert("Click finish drawing before start another one");
+    alert("Click finish drawing before starting another one");
+  }
+});
+
+let drawRectangleBtn = document.getElementById("rectangle");
+drawRectangleBtn.addEventListener("click", () => {
+  if (!isDrawing) {
+    currentSelectedShape = SHAPE.RECTANGLE;
+    isDrawing = true;
+  } else {
+    alert("Click finish drawing before starting another one");
   }
 });
 
@@ -105,7 +115,7 @@ drawPolygonBtn.addEventListener("click", () => {
     currentSelectedShape = SHAPE.POLYGON;
     isDrawing = true;
   } else {
-    alert("Click finish drawing before start another one");
+    alert("Click finish drawing before starting another one");
   }
 });
 
