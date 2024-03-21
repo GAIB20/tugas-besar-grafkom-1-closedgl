@@ -59,19 +59,21 @@ class Line extends Shape {
 }
 
 class Square extends Shape {
-  constructor(x, y) {
+  constructor(x, y, size) {
     super();
 
     // TODO: change this constant
     const SQ_DEFAULT_SIZE = 100;
 
+    let square_size = size ? size : SQ_DEFAULT_SIZE
+
     let _vertices = [];
     let _colors = [];
     _vertices.push(convertToWGLCoordinate(canvas, x, y));
-    _vertices.push(convertToWGLCoordinate(canvas, x + SQ_DEFAULT_SIZE, y));
-    _vertices.push(convertToWGLCoordinate(canvas, x, y + SQ_DEFAULT_SIZE));
+    _vertices.push(convertToWGLCoordinate(canvas, x + square_size, y));
+    _vertices.push(convertToWGLCoordinate(canvas, x, y + square_size));
     _vertices.push(
-      convertToWGLCoordinate(canvas, x + SQ_DEFAULT_SIZE, y + SQ_DEFAULT_SIZE)
+      convertToWGLCoordinate(canvas, x + square_size, y + square_size)
     );
 
     for (let i = 0; i < 4; i++) {
