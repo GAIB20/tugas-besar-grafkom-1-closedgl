@@ -1,4 +1,5 @@
 /**
+ * ====================================================
  * ENUMS
  * */
 const SHAPE = {
@@ -9,9 +10,11 @@ const SHAPE = {
 };
 
 /**
+ * ====================================================
  * State variables
  */
 let isDrawing = false;
+let shapeSize = 0;
 let currentSelectedShape = null;
 let isFocusingCanvas = false;
 let keyPressed = false;
@@ -29,6 +32,21 @@ if (!gl) {
 }
 
 /**
+ * ====================================================
+ * Setup canvas width and height to match display
+ * Setup wgl viewport to match canvas resolution
+ * */
+let displayWidth = canvas.clientWidth;
+let displayHeight = canvas.clientHeight;
+
+if (canvas.width !== displayWidth || canvas.height !== displayHeight) {
+  canvas.width = displayWidth;
+  canvas.height = displayHeight;
+}
+gl.viewport(0, 0, canvas.width, canvas.height);
+
+/**
+ * ====================================================
  * Setup WGL program
  * */
 let fragmentShaderSrc = `
@@ -36,7 +54,7 @@ let fragmentShaderSrc = `
     varying vec4 fragmentColor;
 
     void main() {
-        gl_FragColor = fragmentColor; // mengembalikan warna ungu kemerahan
+        gl_FragColor = fragmentColor;
     }
 `;
 
@@ -48,7 +66,7 @@ let vertexShaderSrc = `
 
     void main() {
         gl_Position = a_position;
-        gl_PointSize = 20.0;
+        gl_PointSize = 10.0;
         fragmentColor = vertexColor;
     }
 `;
@@ -56,12 +74,25 @@ let vertexShaderSrc = `
 const wglProgram = createProgram(vertexShaderSrc, fragmentShaderSrc);
 
 /**
+ * ====================================================
  * Buttons event listener
  */
+
+// Draw buttons
 let drawLineBtn = document.getElementById("line");
 drawLineBtn.addEventListener("click", () => {
   if (!isDrawing) {
     currentSelectedShape = SHAPE.LINE;
+    isDrawing = true;
+  } else {
+    alert("Click finish drawing before start another one");
+  }
+});
+
+let drawSquareBtn = document.getElementById("square");
+drawSquareBtn.addEventListener("click", () => {
+  if (!isDrawing) {
+    currentSelectedShape = SHAPE.SQUARE;
     isDrawing = true;
   } else {
     alert("Click finish drawing before start another one");
@@ -78,33 +109,50 @@ drawPolygonBtn.addEventListener("click", () => {
   }
 });
 
+// Action buttons
+let finishDrawBtn = document.getElementById("finish");
+finishDrawBtn.addEventListener("click", () => {
+  if (isDrawing) {
+    isDrawing = false;
+  }
+});
+
 /**
+ * ====================================================
  * Canvas event listener
  * */
 canvas.addEventListener("mousemove", (e) => {
   // Only draws when canvas is focused
-  if (isFocusingCanvas) {
+  if (isFocusingCanvas && isDrawing) {
     const { x, y } = getCursorPosition(canvas, e);
     onMouseMove(shapes, currentSelectedShape, x, y);
   }
 });
 
 canvas.addEventListener("mousedown", (e) => {
-  isFocusingCanvas = true;
+  if (isDrawing) {
+    isFocusingCanvas = true;
 
-  const { x, y } = getCursorPosition(canvas, e);
-  drawShape(shapes, currentSelectedShape, x, y);
+    const { x, y } = getCursorPosition(canvas, e);
+    drawShape(shapes, currentSelectedShape, x, y, shapeSize);
+  }
 });
 
 canvas.addEventListener("mouseup", () => {
-  isFocusingCanvas = false;
+  if (isDrawing) {
+    isFocusingCanvas = false;
 
-  if (currentSelectedShape === SHAPE.POLYGON) {
-    polygonStopDrawing(shapes, currentSelectedShape);
+    if (currentSelectedShape === SHAPE.POLYGON) {
+      polygonStopDrawing(shapes, currentSelectedShape);
+    }
   }
   console.log(shapes);
 });
 
+/**
+ * ====================================================
+ * Polygon related keybinds
+ * */
 document.addEventListener("keydown", (e) => {
   if (!keyPressed && isFocusingCanvas) {
     if (currentSelectedShape === SHAPE.POLYGON) {
@@ -119,12 +167,21 @@ document.addEventListener("keydown", (e) => {
     keyPressed = true;
   }
 });
-
 document.addEventListener("keyup", (e) => {
   keyPressed = false;
 });
 
 /**
+ * ===================================================
+ * Sliders event listeners
+ * */
+const sizeSlider = document.getElementById("size");
+sizeSlider.addEventListener("input", function (e) {
+  shapeSize = parseInt(sizeSlider.value);
+});
+
+/**
+ * ====================================================
  * Renders all the given shapes on 60fps
  * */
 const renderShapes = (program) => {
