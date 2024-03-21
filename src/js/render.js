@@ -96,6 +96,10 @@ const drawShape = (currShapes, shapeType, x, y, shapeSize = 0) => {
       currShapes.square.push(new Square(x, y, shapeSize));
       break;
 
+    case SHAPE.RECTANGLE:
+      currShapes.rectangle.push(new Rectangle(x, y));
+      break;
+
     case SHAPE.POLYGON:
       currShapes.polygon.push(new Polygon(x, y));
       break;
