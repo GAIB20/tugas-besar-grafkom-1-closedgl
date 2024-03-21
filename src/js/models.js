@@ -104,18 +104,28 @@ class Square extends Shape {
 class Rectangle extends Shape {
   constructor(x, y) {
     super();
+    let _colors = [];
 
     for (let i = 0; i < 4; i++) {
-      this.vertices.push(transformCoordinate(canvas, x, y));
-      this.colors = [[0, 0, 0, 1]];
+      this.vertices.push(convertToWGLCoordinate(canvas, x, y));
+      _colors.push([0, 0, 0, 1]);
     }
+
+    this.colors.push(..._colors);
   }
 
   translate(x, y) {}
 
   scale(x, y) {}
 
-  renderShape(program) {}
+  renderShape(program) {
+    renderVertex(program, flattenMatrix(this.vertices), 2);
+    renderColor(program, flattenMatrix(this.colors), 4);
+    
+    for (let i = 0; i < this.vertices.length; i += 4) {
+      gl.drawArrays(gl.TRIANGLE_STRIP, i, 4);
+    }
+  }
 
   updateLastVertexPosition(x, y) {
     let len = this.vertices.length;
