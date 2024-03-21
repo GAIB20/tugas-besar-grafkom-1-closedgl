@@ -16,7 +16,7 @@ const createShader = (shaderType, shaderText) => {
   return shader;
 };
 
-function createProgram(vertexShaderText, fragmentShaderText) {
+const createProgram = (vertexShaderText, fragmentShaderText) => {
   const vertexShader = createShader(gl.VERTEX_SHADER, vertexShaderText);
   const fragmentShader = createShader(gl.FRAGMENT_SHADER, fragmentShaderText);
 
@@ -80,16 +80,20 @@ const renderVertex = (program, arrData = [], arrSize = 3) => {
 
 const renderColor = (program, arrData = [], arrSize = 3) => {
   if (!gl) alert("WebGL not supported")
-  baseRender(gl, program, arrData, arrSize, "vertColor");
+  baseRender(gl, program, arrData, arrSize, "vertexColor");
 };
 
 /**
  * Draw a new shape based on given shapeType and push it to currShapes
  * */
-const drawShape = (currShapes, shapeType, x, y) => {
+const drawShape = (currShapes, shapeType, x, y, shapeSize = 0) => {
   switch (shapeType) {
     case SHAPE.LINE:
       currShapes.line.push(new Line(x, y));
+      break;
+
+    case SHAPE.SQUARE:
+      currShapes.square.push(new Square(x, y, shapeSize));
       break;
 
     case SHAPE.POLYGON:
