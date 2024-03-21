@@ -35,8 +35,8 @@ class Line extends Shape {
 
     for (let i = 0; i < 2; i++) {
       this.vertices.push(convertToWGLCoordinate(canvas, x, y));
+      this.colors.push([0, 0, 0, 1]);
     }
-    this.colors = [[0, 0, 0, 1]];
   }
 
   translate(x, y) {}
