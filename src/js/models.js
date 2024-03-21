@@ -86,7 +86,17 @@ class Square extends Shape {
 
   scale(x, y) {}
 
-  renderShape(program) {}
+  renderShape(program) {
+    let size = this.vertices.length;
+
+    renderVertex(program, flattenMatrix(this.vertices), 2);
+    renderColor(program, flattenMatrix(this.colors), 4);
+
+    // Draw using triangle strip
+    for (let i = 0; i < size; i += 4) {
+      gl.drawArrays(gl.TRIANGLE_STRIP, i, 4);
+    }
+  }
 }
 
 class Rectangle extends Shape {
