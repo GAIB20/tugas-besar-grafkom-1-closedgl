@@ -155,6 +155,7 @@ editShapeButton.addEventListener("click", () => {
   document.getElementById("translate-x").value = "0";
   document.getElementById("translate-y").value = "0";
   document.getElementById("scale").value = "1";
+  document.getElementById("rotate").value = "0";
   editObject(shapes);
 });
 
