@@ -90,6 +90,26 @@ class Line extends Shape {
     });
   }
 
+  shearXShape(factor, prevFactor) {
+    let relativeFactor = factor - prevFactor;
+
+    this.vertices.forEach((v, index) => {
+      let [x, y] = v;
+      let newX = x + relativeFactor * y;
+      this.vertices[index] = [newX, y];
+    });
+  }
+
+  shearYShape(factor, prevFactor) {
+    let relativeFactor = factor - prevFactor;
+
+    this.vertices.forEach((v, index) => {
+      let [x, y] = v;
+      let newY = y + relativeFactor * x;
+      this.vertices[index] = [x, newY];
+    });
+  }
+
   renderShape(program) {
     // recalculate object center
     this.setCentroid();

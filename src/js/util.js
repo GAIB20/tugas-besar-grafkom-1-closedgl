@@ -366,6 +366,58 @@ const editObject = (shapes) => {
   });
 
   /**
+   * Shear X Transformation
+   */
+  let shearXSlider = document.getElementById("shear-x");
+
+  let newShearXSlider = scaleSlider.cloneNode(true);
+  shearXSlider.parentNode.replaceChild(newShearXSlider, shearXSlider);
+
+  let initShearX = 1;
+
+  newShearXSlider.addEventListener("input", () => {
+    // check global variable `isEditing` if still editing
+    if (!isEditing) return;
+
+    for (let shapeKey in checkedVertices) {
+      let [shapeId, shapeName, _] = shapeKey.split("-");
+
+      let shape = shapes[shapeName.toLowerCase()].find(
+        (shape) => shape.id == shapeId
+      );
+
+      shape.shearXShape(parseFloat(newShearXSlider.value), initShearX);
+    }
+    initShearX = parseFloat(newShearXSlider.value);
+  });
+
+  /**
+   * Shear Y Transformation
+   */
+  let shearYSlider = document.getElementById("shear-y");
+
+  let newShearYSlider = scaleSlider.cloneNode(true);
+  shearYSlider.parentNode.replaceChild(newShearYSlider, shearYSlider);
+
+  let initShearY = 1;
+
+  newShearYSlider.addEventListener("input", () => {
+    // check global variable `isEditing` if still editing
+    if (!isEditing) return;
+
+    for (let shapeKey in checkedVertices) {
+      let [shapeId, shapeName, _] = shapeKey.split("-");
+
+      let shape = shapes[shapeName.toLowerCase()].find(
+        (shape) => shape.id == shapeId
+      );
+
+      shape.shearYShape(parseFloat(newShearYSlider.value), initShearY);
+    }
+    initShearY = parseFloat(newShearYSlider.value);
+  });
+
+  /**
    * Change color
    * */
   let colorInput = document.getElementById("color");
