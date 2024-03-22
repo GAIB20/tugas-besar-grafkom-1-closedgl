@@ -351,7 +351,8 @@ const editObject = (shapes) => {
   newRotateSlider.addEventListener("input", () => {
     // check global variable `isEditing` if still editing
     if (!isEditing) return;
-
+    
+    let rotationValue = parseFloat(newRotateSlider.value) * Math.PI / 180;
     for (let shapeKey in checkedVertices) {
       let [shapeId, shapeName, _] = shapeKey.split("-");
 
@@ -359,9 +360,9 @@ const editObject = (shapes) => {
         (shape) => shape.id == shapeId
       );
 
-      shape.rotateShape(parseFloat(newRotateSlider.value));
+      shape.rotateShape(rotationValue - initRotate);
     }
-    initRotate = parseFloat(newRotateSlider.value) * Math.PI / 180;
+    initRotate = rotationValue;
   });
 
   /**

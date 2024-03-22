@@ -62,12 +62,19 @@ class Line extends Shape {
     this.vertices[vertexIndex] = [currentX + x, currentY + y];
   }
 
-  rotateShape(angle) {
-    let rad = angle * Math.PI / 180;
+  scaleShape(factor, prevFactor) {
+    this.vertices.forEach((v, index) => {
+      let [x, y] = v;
+      let newX = this.centroid[0] + (factor * (x - this.centroid[0])) / prevFactor;
+      let newY = this.centroid[1] + (factor * (y - this.centroid[1])) / prevFactor;
+      this.vertices[index] = [newX, newY];
+    });
+  }
 
-    let cos = Math.cos(rad);
-    let sin = Math.sin(rad);
-    let rotationMatrix = [[cos, -sin], [sin, cos]];
+  rotateShape(angle) {
+    let cos = Math.cos(angle);
+    let sin = Math.sin(angle);
+    let rotationMatrix = [[cos, sin * (-1)], [sin, cos]];
     
     this.vertices.forEach((v, index) => {
       let [x, y] = v;
@@ -80,15 +87,6 @@ class Line extends Shape {
       newX += this.centroid[0];
       newY += this.centroid[1];
 
-      this.vertices[index] = [newX, newY];
-    })
-  }
-
-  scaleShape(factor, prevFactor) {
-    this.vertices.forEach((v, index) => {
-      let [x, y] = v;
-      let newX = this.centroid[0] + (factor * (x - this.centroid[0])) / prevFactor;
-      let newY = this.centroid[1] + (factor * (y - this.centroid[1])) / prevFactor;
       this.vertices[index] = [newX, newY];
     });
   }
