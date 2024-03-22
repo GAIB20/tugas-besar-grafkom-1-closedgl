@@ -2,14 +2,14 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Komputel Glapik</title>
+    <title>Komputer Grafik</title>
     <link rel="stylesheet" type="text/css" href="index.css" />
     <script src="https://cdn.tailwindcss.com"></script>
   </head>
   <body>
     <div class="flex">
       <div
-        class="w-20 h-screen flex flex-col bg-blue-300 justify-center items-center gap-3"
+        class="w-28 h-screen flex flex-col bg-blue-300 justify-center items-center gap-3"
       >
         <button id="save">
           <img src="./assets/save.svg" alt="Save" class="button-img" />
@@ -48,40 +48,41 @@
         <input type="file" id="load" name="selected-shapes" value="load" />
         <button class="w-full rounded-md bg-white" id="edit">Edit</button>
         <button class="w-full rounded-md bg-green-300 mb-4" id="finish">Finish</button>
-        <div class="slidecontainer">
-          <div class="mb-1">Size</div>
+        <div class="w-full">
+          <div class="mb-2">Size</div>
           <input type="range" min="1" max="100" value="50" class="slider" id="size">
         </div>
         
-        <div class="slidecontainer">
-          <div class="mb-1">Translate X</div>
+        <div class="w-full">
+          <div class="mb-2">Translate X</div>
           <input type="range" min="-1" max="1" step="0.1" value="0" class="slider" id="translate-x">
         </div>
 
-        <div class="slidecontainer">
-          <div class="mb-1">Translate Y</div>
+        <div class="w-full">
+          <div class="mb-2">Translate Y</div>
           <input type="range" min="-1" max="1" step="0.1" value="0" class="slider" id="translate-y">
         </div>
 
-        <div class="slidecontainer">
-          <div class="mb-1">Dilation</div>
-          <input type="range" min="0.1" max="2" step="0.1" value="1" class="slider" id="scale">
+        <div class="w-full">
+          <div class="mb-2">Dilation</div>
+          <input type="range" min="0.1" max="2" step="0.1" value="1" class="slider mb-4" id="scale">
         </div>
 
-        <div class="slidecontainer">
-          <div class="mb-1">Color</div>
-          <input type="color" class="slider" id="color">
+        <div class="w-full h-5">
+          <div class="mb-2">Color</div>
+          <input type="color" class="w-full h-5 rounded-3xl" id="color">
         </div>
       </div>
       
       <div class="flex items-center w-full justify-center">
-        <canvas id="c" class="h-[800px] w-[800px]" style="border:1px solid #000000;">
-
+        <canvas id="c" class="h-[800px] w-[1000px]" style="border:1px solid #000000;">
         </canvas>
       </div>
 
-      <div id="shape-data-container" class="bg-red-400 h-[800px] w-[400px] overflow-auto">
-        
+      <div class="bg-blue-200 h-screen w-[400px] overflow-auto px-3 py-5">
+        <div class="flex justify-center font-semibold text-2xl mb-8">Shapes</div>
+        <div id="shape-data-container" class="">
+        </div>
       </div>
     </div>
 
