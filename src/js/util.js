@@ -247,13 +247,19 @@ const editObject = (shapes) => {
   }
 
   /**
+   * NOTE: Every new node created is to remove the previous existing event listeners.
+   */
+  /**
    * X Translation
-  */
+   */
   let translateXSlider = document.getElementById("translate-x");
+
+  let newXSlider = translateXSlider.cloneNode(true);
+  translateXSlider.parentNode.replaceChild(newXSlider, translateXSlider);
 
   let initX = 0;
 
-  translateXSlider.addEventListener("input", () => {
+  newXSlider.addEventListener("input", () => {
     // check global variable `isEditing` if still editing
     if (!isEditing) return;
 
@@ -264,20 +270,27 @@ const editObject = (shapes) => {
       let shape = shapes[shapeName.toLowerCase()].find(
         (shape) => shape.id == shapeId
       );
-      
-      shape.translateVertex(vertexIndex, parseFloat(translateXSlider.value) - initX, 0);
+
+      shape.translateVertex(
+        vertexIndex,
+        parseFloat(newXSlider.value) - initX,
+        0
+      );
     }
-    initX = parseFloat(translateXSlider.value)
+    initX = parseFloat(newXSlider.value);
   });
 
   /**
    * Y Translation
-  */
+   */
   let translateYSlider = document.getElementById("translate-y");
+
+  let newYSlider = translateYSlider.cloneNode(true);
+  translateYSlider.parentNode.replaceChild(newYSlider, translateYSlider);
 
   let initY = 0;
 
-  translateYSlider.addEventListener("input", () => {
+  newYSlider.addEventListener("input", () => {
     // check global variable `isEditing` if still editing
     if (!isEditing) return;
 
@@ -288,20 +301,27 @@ const editObject = (shapes) => {
       let shape = shapes[shapeName.toLowerCase()].find(
         (shape) => shape.id == shapeId
       );
-      
-      shape.translateVertex(vertexIndex, 0, parseFloat(translateYSlider.value) - initY);
+
+      shape.translateVertex(
+        vertexIndex,
+        0,
+        parseFloat(newYSlider.value) - initY
+      );
     }
-    initY = parseFloat(translateYSlider.value)
+    initY = parseFloat(newYSlider.value);
   });
 
   /**
    * Scale Transformation
-  */
+   */
   let scaleSlider = document.getElementById("scale");
+
+  let newScaleSlider = scaleSlider.cloneNode(true);
+  scaleSlider.parentNode.replaceChild(newScaleSlider, scaleSlider);
 
   let initScale = 1;
 
-  scaleSlider.addEventListener("input", () => {
+  newScaleSlider.addEventListener("input", () => {
     // check global variable `isEditing` if still editing
     if (!isEditing) return;
 
@@ -312,10 +332,34 @@ const editObject = (shapes) => {
       let shape = shapes[shapeName.toLowerCase()].find(
         (shape) => shape.id == shapeId
       );
-      
-      shape.scaleShape(parseFloat(scaleSlider.value), initScale);
+
+      shape.scaleShape(parseFloat(newScaleSlider.value), initScale);
     }
-    initScale = parseFloat(scaleSlider.value)
+    initScale = parseFloat(newScaleSlider.value);
+  });
+
+  /**
+   * Change color
+   * */
+  let colorInput = document.getElementById("color");
+
+  let newColorInput = colorInput.cloneNode(true);
+  colorInput.parentNode.replaceChild(newColorInput, colorInput);
+  newColorInput.addEventListener("input", () => {
+    // check global variable `isEditing` if still editing
+    if (!isEditing) {
+      return;
+    }
+
+    for (let shapeKey in checkedVertices) {
+      let [shapeId, shapeName, vertexIndex] = shapeKey.split("-");
+
+      let shape = shapes[shapeName.toLowerCase()].find(
+        (shape) => shape.id == shapeId
+      );
+
+      shape.setColor(vertexIndex, newColorInput.value);
+    }
   });
 };
 

@@ -9,6 +9,13 @@ const SHAPE = {
   POLYGON: "polygon",
 };
 
+const SHAPE_CLASSES = {
+  line: Line,
+  square: Square,
+  rectangle: Rectangle,
+  polygon: Polygon
+}
+
 /**
  * ====================================================
  * State variables
@@ -19,6 +26,7 @@ let shapeSize = 0;
 let currentSelectedShape = null;
 let isFocusingCanvas = false;
 let keyPressed = false;
+let savedFile = null;
 let shapes = {
   line: [],
   square: [],
@@ -140,7 +148,7 @@ editShapeButton.addEventListener("click", () => {
     editShapeButton.textContent = "Finish Edit";
   } else {
     isEditing = false;
-    alert("Editing mode is on");
+    alert("Editing mode is off");
     editShapeButton.textContent = "Edit";
     resetAllCheckboxes();
   }
@@ -148,6 +156,44 @@ editShapeButton.addEventListener("click", () => {
   document.getElementById("translate-y").value = "0";
   document.getElementById("scale").value = "1";
   editObject(shapes);
+});
+
+let saveBtn = document.getElementById("save");
+saveBtn.addEventListener("click", () => {
+  if (!isEditing && !isDrawing) {
+    let jsonFile = JSON.stringify(shapes);
+    let data = new Blob([jsonFile], { type: "application/json" });
+
+    // remove if exists
+    if (savedFile !== null) {
+      window.URL.revokeObjectURL(savedFile);
+    }
+
+    savedFile = window.URL.createObjectURL(data);
+    let link = document.createElement("a");
+    link.setAttribute("download", "shapes.json");
+    link.href = savedFile;
+    document.body.appendChild(link);
+    link.click();
+    alert("Shapes downloaded!");
+  } else {
+    alert("Please finish drawing or editing");
+  }
+});
+
+let loadBtn = document.getElementById("load");
+loadBtn.addEventListener("change", (e) => {
+  if (!isEditing && !isDrawing) {
+    let reader = new FileReader();
+    reader.readAsText(e.target.files[0]);
+    reader.addEventListener("load", () => {
+      loadShapes(JSON.parse(reader.result));
+    });
+
+    alert("Shapes loaded!");
+  } else {
+    alert("Please finish drawing or editing!");
+  }
 });
 
 /**
@@ -205,15 +251,6 @@ document.addEventListener("keyup", (e) => {
 });
 
 /**
- * ===================================================
- * Sliders event listeners
- * */
-const sizeSlider = document.getElementById("size");
-sizeSlider.addEventListener("input", function (e) {
-  shapeSize = parseInt(sizeSlider.value);
-});
-
-/**
  * ====================================================
  * Renders all the given shapes on 60fps
  * */
@@ -246,3 +283,27 @@ window.requestAnimFrame = (() => {
 })();
 
 renderShapes(wglProgram);
+
+/**
+ * Misc
+ * */
+const clearShapes = () => {
+  shapes = {
+    line: [],
+    square: [],
+    rectangle: [],
+    polygon: [],
+  };
+};
+
+const loadShapes = (jsonObj) => {
+  clearShapes();
+  Object.keys(jsonObj).forEach(shapeType => {
+    jsonObj[shapeType].forEach(item => {
+      let obj = new SHAPE_CLASSES[shapeType] ;
+      obj.copy(item);
+      shapes[shapeType].push(obj);
+      listVertices(shapes);
+    });
+  });
+};

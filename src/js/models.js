@@ -10,6 +10,14 @@ class Shape {
     this.centroid = [0, 0]; // x, y
   }
 
+  copy(obj) {
+    this.vertices = obj.vertices;
+    this.colors = obj.colors;
+    this.selected = obj.selected;
+    this.scale = obj.scale;
+    this.translation = obj.translation;
+  }
+
   translateVertex(vertexIndex, x, y) {}
 
   scaleShape(factor, prevFactor) {}
@@ -20,13 +28,12 @@ class Shape {
 
   /**
    * Set colors of each vertices of the shape
-   * @param rgbHexs array of rgbHex
+   * @param vertexIndex
+   * @param rgbHex
    */
-  setColors(rgbHexs) {
-    rgbHexs.forEach((rgbHex, index) => {
-      const { r, g, b } = parseRGB(rgbHex);
-      this.colors[index] = [r, g, b, 1];
-    });
+  setColor(vertexIndex, rgbHex) {
+    const { r, g, b } = parseRGB(rgbHex);
+    this.colors[vertexIndex] = [r, g, b, 1];
   }
 
   /**
