@@ -351,8 +351,8 @@ const editObject = (shapes) => {
   newRotateSlider.addEventListener("input", () => {
     // check global variable `isEditing` if still editing
     if (!isEditing) return;
-    
-    let rotationValue = parseFloat(newRotateSlider.value) * Math.PI / 180;
+
+    let rotationValue = (parseFloat(newRotateSlider.value) * Math.PI) / 180;
     for (let shapeKey in checkedVertices) {
       let [shapeId, shapeName, _] = shapeKey.split("-");
 
@@ -369,53 +369,55 @@ const editObject = (shapes) => {
    * Shear X Transformation
    */
   let shearXSlider = document.getElementById("shear-x");
+  if (shearXSlider) {
+    let newShearXSlider = scaleSlider.cloneNode(true);
+    shearXSlider.parentNode.replaceChild(newShearXSlider, shearXSlider);
 
-  let newShearXSlider = scaleSlider.cloneNode(true);
-  shearXSlider.parentNode.replaceChild(newShearXSlider, shearXSlider);
+    let initShearX = 1;
 
-  let initShearX = 1;
+    newShearXSlider.addEventListener("input", () => {
+      // check global variable `isEditing` if still editing
+      if (!isEditing) return;
 
-  newShearXSlider.addEventListener("input", () => {
-    // check global variable `isEditing` if still editing
-    if (!isEditing) return;
+      for (let shapeKey in checkedVertices) {
+        let [shapeId, shapeName, _] = shapeKey.split("-");
 
-    for (let shapeKey in checkedVertices) {
-      let [shapeId, shapeName, _] = shapeKey.split("-");
+        let shape = shapes[shapeName.toLowerCase()].find(
+          (shape) => shape.id == shapeId
+        );
 
-      let shape = shapes[shapeName.toLowerCase()].find(
-        (shape) => shape.id == shapeId
-      );
-
-      shape.shearXShape(parseFloat(newShearXSlider.value), initShearX);
-    }
-    initShearX = parseFloat(newShearXSlider.value);
-  });
+        shape.shearXShape(parseFloat(newShearXSlider.value), initShearX);
+      }
+      initShearX = parseFloat(newShearXSlider.value);
+    });
+  }
 
   /**
    * Shear Y Transformation
    */
   let shearYSlider = document.getElementById("shear-y");
+  if (shearYSlider) {
+    let newShearYSlider = scaleSlider.cloneNode(true);
+    shearYSlider.parentNode.replaceChild(newShearYSlider, shearYSlider);
 
-  let newShearYSlider = scaleSlider.cloneNode(true);
-  shearYSlider.parentNode.replaceChild(newShearYSlider, shearYSlider);
+    let initShearY = 1;
 
-  let initShearY = 1;
+    newShearYSlider.addEventListener("input", () => {
+      // check global variable `isEditing` if still editing
+      if (!isEditing) return;
 
-  newShearYSlider.addEventListener("input", () => {
-    // check global variable `isEditing` if still editing
-    if (!isEditing) return;
+      for (let shapeKey in checkedVertices) {
+        let [shapeId, shapeName, _] = shapeKey.split("-");
 
-    for (let shapeKey in checkedVertices) {
-      let [shapeId, shapeName, _] = shapeKey.split("-");
+        let shape = shapes[shapeName.toLowerCase()].find(
+          (shape) => shape.id == shapeId
+        );
 
-      let shape = shapes[shapeName.toLowerCase()].find(
-        (shape) => shape.id == shapeId
-      );
-
-      shape.shearYShape(parseFloat(newShearYSlider.value), initShearY);
-    }
-    initShearY = parseFloat(newShearYSlider.value);
-  });
+        shape.shearYShape(parseFloat(newShearYSlider.value), initShearY);
+      }
+      initShearY = parseFloat(newShearYSlider.value);
+    });
+  }
 
   /**
    * Change color
@@ -424,12 +426,13 @@ const editObject = (shapes) => {
 
   let newColorInput = colorInput.cloneNode(true);
   colorInput.parentNode.replaceChild(newColorInput, colorInput);
+
   newColorInput.addEventListener("input", () => {
     // check global variable `isEditing` if still editing
     if (!isEditing) {
       return;
     }
-
+    console.log(checkedVertices);
     for (let shapeKey in checkedVertices) {
       let [shapeId, shapeName, vertexIndex] = shapeKey.split("-");
 
