@@ -77,9 +77,8 @@ class Line extends Shape {
     let rotationMatrix = [[cos, sin * (-1)], [sin, cos]];
     
     this.vertices.forEach((v, index) => {
-      let [x, y] = v;
-
       // Rotate the shape like a wheel
+      let [x, y] = v;
       x -= this.centroid[0];
       y -= this.centroid[1];
       let newX = x * rotationMatrix[0][0] + y * rotationMatrix[0][1];
@@ -139,7 +138,11 @@ class Square extends Shape {
 
   scale(x, y) {}
 
+  rotateShape(angle) {}
+
   renderShape(program) {
+    this.setCentroid();
+
     let size = this.vertices.length;
 
     renderVertex(program, flattenMatrix(this.vertices), 2);
@@ -181,7 +184,28 @@ class Rectangle extends Shape {
     });
   }
 
+  rotateShape(angle) {
+    let cos = Math.cos(angle);
+    let sin = Math.sin(angle);
+    let rotationMatrix = [[cos, sin * (-1)], [sin, cos]];
+    
+    this.vertices.forEach((v, index) => {
+      // Rotate the shape like a wheel
+      let [x, y] = v;
+      x -= this.centroid[0];
+      y -= this.centroid[1];
+      let newX = x * rotationMatrix[0][0] + y * rotationMatrix[0][1];
+      let newY = x * rotationMatrix[1][0] + y * rotationMatrix[1][1];
+      newX += this.centroid[0];
+      newY += this.centroid[1];
+
+      this.vertices[index] = [newX, newY];
+    });
+  }
+
   renderShape(program) {
+    this.setCentroid();
+
     renderVertex(program, flattenMatrix(this.vertices), 2);
     renderColor(program, flattenMatrix(this.colors), 4);
     
@@ -218,6 +242,8 @@ class Polygon extends Shape {
   scale(x, y) {}
 
   renderShape(program) {
+    this.setCentroid();
+
     renderVertex(program, flattenMatrix(this.vertices), 2);
     renderColor(program, flattenMatrix(this.colors), 4);
 
