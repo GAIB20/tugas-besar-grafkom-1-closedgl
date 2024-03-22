@@ -346,7 +346,7 @@ const editObject = (shapes) => {
   let newRotateSlider = rotateSlider.cloneNode(true);
   rotateSlider.parentNode.replaceChild(newRotateSlider, rotateSlider);
 
-  let initRotate = 1;
+  let initRotate = 0;
 
   newRotateSlider.addEventListener("input", () => {
     // check global variable `isEditing` if still editing
@@ -361,7 +361,7 @@ const editObject = (shapes) => {
 
       shape.rotateShape(parseFloat(newRotateSlider.value));
     }
-    initRotate = parseFloat(newRotateSlider.value);
+    initRotate = parseFloat(newRotateSlider.value) * Math.PI / 180;
   });
 
   /**
