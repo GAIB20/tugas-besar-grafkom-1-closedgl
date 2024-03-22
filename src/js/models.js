@@ -152,7 +152,14 @@ class Rectangle extends Shape {
     this.vertices[vertexIndex] = [currentX + x, currentY + y];
   }
 
-  scale(x, y) {}
+  scaleShape(factor, prevFactor) {
+    this.vertices.forEach((v, index) => {
+      let [x, y] = v;
+      let newX = this.centroid[0] + (factor * (x - this.centroid[0])) / prevFactor;
+      let newY = this.centroid[1] + (factor * (y - this.centroid[1])) / prevFactor;
+      this.vertices[index] = [newX, newY];
+    });
+  }
 
   renderShape(program) {
     renderVertex(program, flattenMatrix(this.vertices), 2);
