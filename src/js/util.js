@@ -339,6 +339,32 @@ const editObject = (shapes) => {
   });
 
   /**
+   * Rotate Transformation
+   */
+  let rotateSlider = document.getElementById("rotate");
+
+  let newRotateSlider = rotateSlider.cloneNode(true);
+  rotateSlider.parentNode.replaceChild(newRotateSlider, rotateSlider);
+
+  let initRotate = 1;
+
+  newRotateSlider.addEventListener("input", () => {
+    // check global variable `isEditing` if still editing
+    if (!isEditing) return;
+
+    for (let shapeKey in checkedVertices) {
+      let [shapeId, shapeName, _] = shapeKey.split("-");
+
+      let shape = shapes[shapeName.toLowerCase()].find(
+        (shape) => shape.id == shapeId
+      );
+
+      shape.rotateShape(parseFloat(newRotateSlider.value));
+    }
+    initRotate = parseFloat(newRotateSlider.value);
+  });
+
+  /**
    * Change color
    * */
   let colorInput = document.getElementById("color");
