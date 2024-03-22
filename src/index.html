@@ -46,7 +46,7 @@
 
       <div class="p-10 flex flex-col justify-center items-center gap-4 bg-blue-100 w-54 border border-black">
         <button class="w-full rounded-md bg-blue-400">Load</button>
-        <button class="w-full rounded-md bg-white">Edit</button>
+        <button class="w-full rounded-md bg-white" id="edit">Edit</button>
         <button class="w-full rounded-md bg-green-300 mb-4" id="finish">Finish</button>
         <div class="slidecontainer">
           <div class="mb-1">Size</div>
@@ -55,24 +55,28 @@
         
         <div class="slidecontainer">
           <div class="mb-1">Translate X</div>
-          <input type="range" min="1" max="100" value="50" class="slider" id="translate-x">
+          <input type="range" min="-1" max="1" step="0.1" value="0" class="slider" id="translate-x">
         </div>
 
         <div class="slidecontainer">
           <div class="mb-1">Translate Y</div>
-          <input type="range" min="1" max="100" value="50" class="slider" id="size">
+          <input type="range" min="-1" max="1" step="0.1" value="0" class="slider" id="translate-y">
         </div>
 
         <div class="slidecontainer">
           <div class="mb-1">Dilation</div>
-          <input type="range" min="1" max="100" value="50" class="slider" id="size">
+          <input type="range" min="0.1" max="2" step="0.1" value="1" class="slider" id="scale">
         </div>
       </div>
-
+      
       <div class="flex items-center w-full justify-center">
         <canvas id="c" class="h-[800px] w-[800px]" style="border:1px solid #000000;">
 
         </canvas>
+      </div>
+
+      <div id="shape-data-container" class="bg-red-400 h-[800px] w-[400px] overflow-auto">
+        
       </div>
     </div>
 

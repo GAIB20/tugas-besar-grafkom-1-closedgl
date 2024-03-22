@@ -139,3 +139,193 @@ const polygonStopDrawing = (currShapes, shapeType) => {
     currShapes[SHAPE.POLYGON].pop();
   }
 };
+
+/**
+ * Generate UUID
+ * To generate unique id for every shape generated
+ */
+const generateUUID = () => {
+  return "xxxxxxxx_xxxx_4xxx_yxxx_xxxxxxxxxxxx".replace(/[xy]/g, function (c) {
+    var r = (Math.random() * 16) | 0,
+      v = c === "x" ? r : (r & 0x3) | 0x8;
+    return v.toString(16);
+  });
+};
+
+/**
+ * Append list of checkboxes for every shapes
+ * @param shapes
+ * */
+const listVertices = (shapes) => {
+  // Get the container div
+  let container = document.getElementById("shape-data-container");
+
+  // Clear the container
+  container.innerHTML = "";
+
+  for (let shapeType in shapes) {
+    let shapeArray = shapes[shapeType];
+
+    shapeArray.forEach((shape, shapeIndex) => {
+      // Create a checkbox for the shape
+      let shapeCheckbox = document.createElement("input");
+      shapeCheckbox.type = "checkbox";
+      shapeCheckbox.id = `${shape.id}-shape-${shapeIndex}`;
+      shapeCheckbox.name = `${shape.id}-shape-${shapeIndex}`;
+
+      // Create a label for the shape checkbox
+      let shapeLabel = document.createElement("label");
+      shapeLabel.htmlFor = shapeCheckbox.id;
+      shapeLabel.textContent = `${shape.constructor.name} ${shapeIndex + 1}`;
+
+      // Append the shape checkbox and label to the container
+      container.appendChild(shapeCheckbox);
+      container.appendChild(shapeLabel);
+      container.appendChild(document.createElement("br"));
+
+      // Iterate over each vertex in the shape
+      shape.vertices.forEach((_, vertexIndex) => {
+        // Create a checkbox for the vertex
+        let vertexCheckbox = document.createElement("input");
+        vertexCheckbox.type = "checkbox";
+        vertexCheckbox.id = `${shape.id}-${shape.constructor.name}-${shapeIndex}-vertex-${vertexIndex}`;
+        vertexCheckbox.name = `${shape.id}-${shape.constructor.name}-${shapeIndex}-vertex-${vertexIndex}`;
+
+        // Create a label for the vertex checkbox
+        let vertexLabel = document.createElement("label");
+        vertexLabel.htmlFor = vertexCheckbox.id;
+        vertexLabel.textContent = `Vertex ${vertexIndex + 1}`;
+
+        // Append the vertex checkbox and label to the container
+        container.appendChild(vertexCheckbox);
+        container.appendChild(vertexLabel);
+        container.appendChild(document.createElement("br"));
+
+        // Event listener to shape checkbox
+        shapeCheckbox.addEventListener("change", function () {
+          vertexCheckbox.checked = shapeCheckbox.checked;
+        });
+
+        // Event listener to vertex checkbox
+        vertexCheckbox.addEventListener("change", function () {
+          if (!vertexCheckbox.checked) {
+            shapeCheckbox.checked = false;
+          }
+        });
+      });
+
+      // Separator between shapes
+      container.appendChild(document.createElement("hr"));
+    });
+  }
+};
+
+const editObject = (shapes) => {
+  let container = document.getElementById("shape-data-container");
+
+  let checkboxes = container.getElementsByTagName("input");
+
+  // Object to store the checked vertices for each shape
+  let checkedVertices = {};
+
+  // Loop over each checkbox
+  for (let checkbox of checkboxes) {
+    if (checkbox.checked) {
+      // Extract the shape id, shape index, and vertex index from the checkbox id
+      let [shapeId, shapeName, _, __, vertexIndex] = checkbox.id.split("-");
+
+      // If the checkbox is for a vertex
+      if (vertexIndex !== undefined) {
+        // Add the vertex index to the checkedVertices
+        let shapeKey = `${shapeId}-${shapeName}-${vertexIndex}`;
+        if (!checkedVertices[shapeKey]) {
+          checkedVertices[shapeKey] = [];
+        }
+        checkedVertices[shapeKey].push(vertexIndex);
+      }
+    }
+  }
+
+  /**
+   * X Translation
+  */
+  let translateXSlider = document.getElementById("translate-x");
+
+  let initX = 0;
+
+  translateXSlider.addEventListener("input", () => {
+    // check global variable `isEditing` if still editing
+    if (!isEditing) return;
+
+    // Loop over each shape in checkedVertices and apply the X translation
+    for (let shapeKey in checkedVertices) {
+      let [shapeId, shapeName, vertexIndex] = shapeKey.split("-");
+
+      let shape = shapes[shapeName.toLowerCase()].find(
+        (shape) => shape.id == shapeId
+      );
+      
+      shape.translateVertex(vertexIndex, parseFloat(translateXSlider.value) - initX, 0);
+    }
+    initX = parseFloat(translateXSlider.value)
+  });
+
+  /**
+   * Y Translation
+  */
+  let translateYSlider = document.getElementById("translate-y");
+
+  let initY = 0;
+
+  translateYSlider.addEventListener("input", () => {
+    // check global variable `isEditing` if still editing
+    if (!isEditing) return;
+
+    // Loop over each shape in checkedVertices and apply the Y translation
+    for (let shapeKey in checkedVertices) {
+      let [shapeId, shapeName, vertexIndex] = shapeKey.split("-");
+
+      let shape = shapes[shapeName.toLowerCase()].find(
+        (shape) => shape.id == shapeId
+      );
+      
+      shape.translateVertex(vertexIndex, 0, parseFloat(translateYSlider.value) - initY);
+    }
+    initY = parseFloat(translateYSlider.value)
+  });
+
+  /**
+   * Scale Transformation
+  */
+  let scaleSlider = document.getElementById("scale");
+
+  let initScale = 1;
+
+  scaleSlider.addEventListener("input", () => {
+    // check global variable `isEditing` if still editing
+    if (!isEditing) return;
+
+    // Loop over each shape in checkedVertices and apply the Y translation
+    for (let shapeKey in checkedVertices) {
+      let [shapeId, shapeName, _] = shapeKey.split("-");
+
+      let shape = shapes[shapeName.toLowerCase()].find(
+        (shape) => shape.id == shapeId
+      );
+      
+      shape.scaleShape(parseFloat(scaleSlider.value), initScale);
+    }
+    initScale = parseFloat(scaleSlider.value)
+  });
+};
+
+const resetAllCheckboxes = () => {
+  let container = document.getElementById("shape-data-container");
+  let checkboxes = container.getElementsByTagName("input");
+
+  for (let checkbox of checkboxes) {
+    if (checkbox.checked) {
+      checkbox.checked = false;
+    }
+  }
+};

@@ -1,5 +1,6 @@
 class Shape {
   constructor() {
+    this.id = generateUUID();
     this.vertices = []; // matrix of vertices
     this.colors = []; // matrix of vertices color in r,g,b form. Defaults to black
     this.selected = false;
@@ -9,9 +10,9 @@ class Shape {
     this.centroid = [0, 0]; // x, y
   }
 
-  translate(x, y) {}
+  translateVertex(vertexIndex, x, y) {}
 
-  scale(x, y) {}
+  scaleShape(factor, prevFactor) {}
 
   updateLastVertexPosition(x, y) {}
 
@@ -27,6 +28,13 @@ class Shape {
       this.colors[index] = [r, g, b, 1];
     });
   }
+
+  /**
+   * Set the center of the shape
+   */
+  setCentroid() {
+    this.centroid = calculateCentroid(this.vertices);
+  }
 }
 
 class Line extends Shape {
@@ -39,11 +47,27 @@ class Line extends Shape {
     }
   }
 
-  translate(x, y) {}
+  translateVertex(vertexIndex, x, y) {
+    // do the translation here
+    let currentX = this.vertices[vertexIndex][0];
+    let currentY = this.vertices[vertexIndex][1];
 
-  scale(x, y) {}
+    this.vertices[vertexIndex] = [currentX + x, currentY + y];
+  }
+
+  scaleShape(factor, prevFactor) {
+    this.vertices.forEach((v, index) => {
+      let [x, y] = v;
+      let newX = this.centroid[0] + (factor * (x - this.centroid[0])) / prevFactor;
+      let newY = this.centroid[1] + (factor * (y - this.centroid[1])) / prevFactor;
+      this.vertices[index] = [newX, newY];
+    });
+  }
 
   renderShape(program) {
+    // recalculate object center
+    this.setCentroid();
+
     renderVertex(program, flattenMatrix(this.vertices), 2);
     renderColor(program, flattenMatrix(this.colors), 4);
     for (let i = 0; i < this.vertices.length; i += 2) {
@@ -65,7 +89,7 @@ class Square extends Shape {
     // TODO: change this constant
     const SQ_DEFAULT_SIZE = 100;
 
-    let square_size = size ? size : SQ_DEFAULT_SIZE
+    let square_size = size ? size : SQ_DEFAULT_SIZE;
 
     let _vertices = [];
     let _colors = [];
@@ -157,7 +181,7 @@ class Polygon extends Shape {
 
   stopDrawing() {
     this.isAddingVertex = false;
-    this.recalculatePolygon()
+    this.recalculatePolygon();
   }
 
   recalculatePolygon() {

@@ -14,6 +14,7 @@ const SHAPE = {
  * State variables
  */
 let isDrawing = false;
+let isEditing = false;
 let shapeSize = 0;
 let currentSelectedShape = null;
 let isFocusingCanvas = false;
@@ -54,7 +55,7 @@ let fragmentShaderSrc = `
     varying vec4 fragmentColor;
 
     void main() {
-        gl_FragColor = fragmentColor;
+      gl_FragColor = fragmentColor;
     }
 `;
 
@@ -65,9 +66,9 @@ let vertexShaderSrc = `
     varying vec4 fragmentColor;
 
     void main() {
-        gl_Position = a_position;
-        gl_PointSize = 10.0;
-        fragmentColor = vertexColor;
+      gl_Position = a_position;
+      gl_PointSize = 10.0;
+      fragmentColor = vertexColor;
     }
 `;
 
@@ -81,9 +82,10 @@ const wglProgram = createProgram(vertexShaderSrc, fragmentShaderSrc);
 // Draw buttons
 let drawLineBtn = document.getElementById("line");
 drawLineBtn.addEventListener("click", () => {
-  if (!isDrawing) {
+  if (!isDrawing && !isEditing) {
     currentSelectedShape = SHAPE.LINE;
     isDrawing = true;
+    alert("You can start drawing now");
   } else {
     alert("Click finish drawing before start another one");
   }
@@ -91,9 +93,10 @@ drawLineBtn.addEventListener("click", () => {
 
 let drawSquareBtn = document.getElementById("square");
 drawSquareBtn.addEventListener("click", () => {
-  if (!isDrawing) {
+  if (!isDrawing && !isEditing) {
     currentSelectedShape = SHAPE.SQUARE;
     isDrawing = true;
+    alert("You can start drawing now");
   } else {
     alert("Click finish drawing before start another one");
   }
@@ -101,9 +104,10 @@ drawSquareBtn.addEventListener("click", () => {
 
 let drawPolygonBtn = document.getElementById("polygon");
 drawPolygonBtn.addEventListener("click", () => {
-  if (!isDrawing) {
+  if (!isDrawing && !isEditing) {
     currentSelectedShape = SHAPE.POLYGON;
     isDrawing = true;
+    alert("You can start drawing now");
   } else {
     alert("Click finish drawing before start another one");
   }
@@ -114,7 +118,26 @@ let finishDrawBtn = document.getElementById("finish");
 finishDrawBtn.addEventListener("click", () => {
   if (isDrawing) {
     isDrawing = false;
+    alert("Finished drawing");
   }
+});
+
+let editShapeButton = document.getElementById("edit");
+editShapeButton.addEventListener("click", () => {
+  if (!isDrawing && !isEditing) {
+    isEditing = true;
+    alert("You can start editing now!");
+    editShapeButton.textContent = "Finish Edit";
+  } else {
+    isEditing = false;
+    alert("Editing mode is on");
+    editShapeButton.textContent = "Edit";
+    resetAllCheckboxes();
+  }
+  document.getElementById("translate-x").value = "0";
+  document.getElementById("translate-y").value = "0";
+  document.getElementById("scale").value = "1";
+  editObject(shapes);
 });
 
 /**

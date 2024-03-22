@@ -5,10 +5,7 @@ const createShader = (shaderType, shaderText) => {
   gl.compileShader(shader);
 
   if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
-    console.error(
-      "err: ",
-      gl.getShaderInfoLog(shader)
-    );
+    console.error("err: ", gl.getShaderInfoLog(shader));
     gl.deleteShader(shader);
     return null;
   }
@@ -42,7 +39,7 @@ const createProgram = (vertexShaderText, fragmentShaderText) => {
   gl.deleteShader(fragmentShader);
 
   return program;
-}
+};
 
 const baseRender = (
   gl,
@@ -74,12 +71,12 @@ const baseRender = (
 };
 
 const renderVertex = (program, arrData = [], arrSize = 3) => {
-  if (!gl) alert("WebGL not supported")
+  if (!gl) alert("WebGL not supported");
   baseRender(gl, program, arrData, arrSize, "a_position");
 };
 
 const renderColor = (program, arrData = [], arrSize = 3) => {
-  if (!gl) alert("WebGL not supported")
+  if (!gl) alert("WebGL not supported");
   baseRender(gl, program, arrData, arrSize, "vertexColor");
 };
 
@@ -90,6 +87,7 @@ const drawShape = (currShapes, shapeType, x, y, shapeSize = 0) => {
   switch (shapeType) {
     case SHAPE.LINE:
       currShapes.line.push(new Line(x, y));
+
       break;
 
     case SHAPE.SQUARE:
@@ -101,8 +99,9 @@ const drawShape = (currShapes, shapeType, x, y, shapeSize = 0) => {
       break;
 
     default:
-      break;
+      break; 
   }
+  listVertices(currShapes);
 };
 
 const clearCanvas = () => {
