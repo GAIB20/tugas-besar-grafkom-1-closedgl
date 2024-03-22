@@ -115,6 +115,7 @@ drawRectangleBtn.addEventListener("click", () => {
   if (!isDrawing) {
     currentSelectedShape = SHAPE.RECTANGLE;
     isDrawing = true;
+    alert("You can start drawing now");
   } else {
     alert("Click finish drawing before starting another one");
   }

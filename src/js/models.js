@@ -135,15 +135,13 @@ class Square extends Shape {
     // TODO: change this constant
     const SQ_DEFAULT_SIZE = 100;
 
-    let square_size = size ? size : SQ_DEFAULT_SIZE;
-
     let _vertices = [];
     let _colors = [];
     _vertices.push(convertToWGLCoordinate(canvas, x, y));
-    _vertices.push(convertToWGLCoordinate(canvas, x + square_size, y));
-    _vertices.push(convertToWGLCoordinate(canvas, x, y + square_size));
+    _vertices.push(convertToWGLCoordinate(canvas, x + SQ_DEFAULT_SIZE, y));
+    _vertices.push(convertToWGLCoordinate(canvas, x, y + SQ_DEFAULT_SIZE));
     _vertices.push(
-      convertToWGLCoordinate(canvas, x + square_size, y + square_size)
+      convertToWGLCoordinate(canvas, x + SQ_DEFAULT_SIZE, y + SQ_DEFAULT_SIZE)
     );
 
     for (let i = 0; i < 4; i++) {
@@ -154,15 +152,60 @@ class Square extends Shape {
     this.vertices.push(..._vertices);
   }
 
-  translate(x, y) {}
+  translateVertex(vertexIndex, x, y) {
+    let currentX = this.vertices[vertexIndex][0];
+    let currentY = this.vertices[vertexIndex][1];
 
-  scale(x, y) {}
+    this.vertices[vertexIndex] = [currentX + x, currentY + y];
+  }
 
-  rotateShape(angle) {}
+  scaleShape(factor, prevFactor) {
+    this.vertices.forEach((v, index) => {
+      let [x, y] = v;
+      let newX = this.centroid[0] + (factor * (x - this.centroid[0])) / prevFactor;
+      let newY = this.centroid[1] + (factor * (y - this.centroid[1])) / prevFactor;
+      this.vertices[index] = [newX, newY];
+    });
+  }
 
-  shearXShape(factor, prevFactor) {}
+  rotateShape(angle) {
+    let cos = Math.cos(angle);
+    let sin = Math.sin(angle);
+    let rotationMatrix = [[cos, sin * (-1)], [sin, cos]];
+    
+    this.vertices.forEach((v, index) => {
+      // Rotate the shape like a wheel
+      let [x, y] = v;
+      x -= this.centroid[0];
+      y -= this.centroid[1];
+      let newX = x * rotationMatrix[0][0] + y * rotationMatrix[0][1];
+      let newY = x * rotationMatrix[1][0] + y * rotationMatrix[1][1];
+      newX += this.centroid[0];
+      newY += this.centroid[1];
+
+      this.vertices[index] = [newX, newY];
+    });
+  }
+
+  shearXShape(factor, prevFactor) {
+    let relativeFactor = factor - prevFactor;
+
+    this.vertices.forEach((v, index) => {
+      let [x, y] = v;
+      let newX = x + relativeFactor * y;
+      this.vertices[index] = [newX, y];
+    });
+  }
   
-  shearYShape(factor, prevFactor) {}
+  shearYShape(factor, prevFactor) {
+    let relativeFactor = factor - prevFactor;
+
+    this.vertices.forEach((v, index) => {
+      let [x, y] = v;
+      let newY = y + relativeFactor * x;
+      this.vertices[index] = [x, newY];
+    });
+  }
 
   renderShape(program) {
     this.setCentroid();
