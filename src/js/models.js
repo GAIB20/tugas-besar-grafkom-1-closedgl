@@ -145,7 +145,12 @@ class Rectangle extends Shape {
     this.colors.push(..._colors);
   }
 
-  translate(x, y) {}
+  translateVertex(vertexIndex, x, y) {
+    let currentX = this.vertices[vertexIndex][0];
+    let currentY = this.vertices[vertexIndex][1];
+
+    this.vertices[vertexIndex] = [currentX + x, currentY + y];
+  }
 
   scale(x, y) {}
 
