@@ -18,9 +18,24 @@ class Shape {
     this.translation = obj.translation;
   }
 
-  translateVertex(vertexIndex, x, y) {}
+  translateVertex(vertexIndex, x, y) {
+    // do the translation here
+    let currentX = this.vertices[vertexIndex][0];
+    let currentY = this.vertices[vertexIndex][1];
 
-  scaleShape(factor, prevFactor) {}
+    this.vertices[vertexIndex] = [currentX + x, currentY + y];
+  }
+
+  scaleShape(factor, prevFactor) {
+    this.vertices.forEach((v, index) => {
+      let [x, y] = v;
+      let newX =
+        this.centroid[0] + (factor * (x - this.centroid[0])) / prevFactor;
+      let newY =
+        this.centroid[1] + (factor * (y - this.centroid[1])) / prevFactor;
+      this.vertices[index] = [newX, newY];
+    });
+  }
 
   updateLastVertexPosition(x, y) {}
 
@@ -52,25 +67,6 @@ class Line extends Shape {
       this.vertices.push(convertToWGLCoordinate(canvas, x, y));
       this.colors.push([0, 0, 0, 1]);
     }
-  }
-
-  translateVertex(vertexIndex, x, y) {
-    // do the translation here
-    let currentX = this.vertices[vertexIndex][0];
-    let currentY = this.vertices[vertexIndex][1];
-
-    this.vertices[vertexIndex] = [currentX + x, currentY + y];
-  }
-
-  scaleShape(factor, prevFactor) {
-    this.vertices.forEach((v, index) => {
-      let [x, y] = v;
-      let newX =
-        this.centroid[0] + (factor * (x - this.centroid[0])) / prevFactor;
-      let newY =
-        this.centroid[1] + (factor * (y - this.centroid[1])) / prevFactor;
-      this.vertices[index] = [newX, newY];
-    });
   }
 
   rotateShape(angle) {
@@ -157,24 +153,6 @@ class Square extends Shape {
     this.vertices.push(..._vertices);
   }
 
-  translateVertex(vertexIndex, x, y) {
-    let currentX = this.vertices[vertexIndex][0];
-    let currentY = this.vertices[vertexIndex][1];
-
-    this.vertices[vertexIndex] = [currentX + x, currentY + y];
-  }
-
-  scaleShape(factor, prevFactor) {
-    this.vertices.forEach((v, index) => {
-      let [x, y] = v;
-      let newX =
-        this.centroid[0] + (factor * (x - this.centroid[0])) / prevFactor;
-      let newY =
-        this.centroid[1] + (factor * (y - this.centroid[1])) / prevFactor;
-      this.vertices[index] = [newX, newY];
-    });
-  }
-
   rotateShape(angle) {
     let cos = Math.cos(angle);
     let sin = Math.sin(angle);
@@ -245,24 +223,6 @@ class Rectangle extends Shape {
     this.colors.push(..._colors);
   }
 
-  translateVertex(vertexIndex, x, y) {
-    let currentX = this.vertices[vertexIndex][0];
-    let currentY = this.vertices[vertexIndex][1];
-
-    this.vertices[vertexIndex] = [currentX + x, currentY + y];
-  }
-
-  scaleShape(factor, prevFactor) {
-    this.vertices.forEach((v, index) => {
-      let [x, y] = v;
-      let newX =
-        this.centroid[0] + (factor * (x - this.centroid[0])) / prevFactor;
-      let newY =
-        this.centroid[1] + (factor * (y - this.centroid[1])) / prevFactor;
-      this.vertices[index] = [newX, newY];
-    });
-  }
-
   rotateShape(angle) {
     let cos = Math.cos(angle);
     let sin = Math.sin(angle);
@@ -329,21 +289,15 @@ class Polygon extends Shape {
   constructor(x, y) {
     super();
 
-    // flags to indicate if polygon is still in drawing mode (initialization)
-    this.isAddingVertex = true;
-
     // start as line
     for (let i = 0; i < 2; i++) {
       this.vertices.push(convertToWGLCoordinate(canvas, x, y));
-      this.colors.push([0, 0, 0, 1]);    }
+      this.colors.push([0, 0, 0, 1]);
+    }
 
     // flags to indicate if polygon is still in drawing mode (initialization)
     this.isAddingVertex = true;
   }
-
-  translate(x, y) {}
-
-  scale(x, y) {}
 
   rotateShape(angle) {}
 
@@ -371,17 +325,19 @@ class Polygon extends Shape {
 
   recalculatePolygon() {
     // todo: recalculate convex hull
-    this.centroid = calculateCentroid(this.vertices);
+    this.setCentroid();
   }
 
   addVertex(x, y) {
     this.vertices.push(convertToWGLCoordinate(canvas, x, y));
     this.colors.push([0, 0, 0, 1]);
+    this.setCentroid();
   }
 
   removeLastVertex() {
     this.vertices.pop();
     this.colors.pop();
+    this.setCentroid();
   }
 
   updateLastVertexPosition(x, y) {
