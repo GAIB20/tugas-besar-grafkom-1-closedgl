@@ -65,8 +65,10 @@ class Line extends Shape {
   scaleShape(factor, prevFactor) {
     this.vertices.forEach((v, index) => {
       let [x, y] = v;
-      let newX = this.centroid[0] + (factor * (x - this.centroid[0])) / prevFactor;
-      let newY = this.centroid[1] + (factor * (y - this.centroid[1])) / prevFactor;
+      let newX =
+        this.centroid[0] + (factor * (x - this.centroid[0])) / prevFactor;
+      let newY =
+        this.centroid[1] + (factor * (y - this.centroid[1])) / prevFactor;
       this.vertices[index] = [newX, newY];
     });
   }
@@ -74,8 +76,11 @@ class Line extends Shape {
   rotateShape(angle) {
     let cos = Math.cos(angle);
     let sin = Math.sin(angle);
-    let rotationMatrix = [[cos, sin * (-1)], [sin, cos]];
-    
+    let rotationMatrix = [
+      [cos, sin * -1],
+      [sin, cos],
+    ];
+
     this.vertices.forEach((v, index) => {
       // Rotate the shape like a wheel
       let [x, y] = v;
@@ -162,8 +167,10 @@ class Square extends Shape {
   scaleShape(factor, prevFactor) {
     this.vertices.forEach((v, index) => {
       let [x, y] = v;
-      let newX = this.centroid[0] + (factor * (x - this.centroid[0])) / prevFactor;
-      let newY = this.centroid[1] + (factor * (y - this.centroid[1])) / prevFactor;
+      let newX =
+        this.centroid[0] + (factor * (x - this.centroid[0])) / prevFactor;
+      let newY =
+        this.centroid[1] + (factor * (y - this.centroid[1])) / prevFactor;
       this.vertices[index] = [newX, newY];
     });
   }
@@ -171,8 +178,11 @@ class Square extends Shape {
   rotateShape(angle) {
     let cos = Math.cos(angle);
     let sin = Math.sin(angle);
-    let rotationMatrix = [[cos, sin * (-1)], [sin, cos]];
-    
+    let rotationMatrix = [
+      [cos, sin * -1],
+      [sin, cos],
+    ];
+
     this.vertices.forEach((v, index) => {
       // Rotate the shape like a wheel
       let [x, y] = v;
@@ -196,7 +206,7 @@ class Square extends Shape {
       this.vertices[index] = [newX, y];
     });
   }
-  
+
   shearYShape(factor, prevFactor) {
     let relativeFactor = factor - prevFactor;
 
@@ -245,8 +255,10 @@ class Rectangle extends Shape {
   scaleShape(factor, prevFactor) {
     this.vertices.forEach((v, index) => {
       let [x, y] = v;
-      let newX = this.centroid[0] + (factor * (x - this.centroid[0])) / prevFactor;
-      let newY = this.centroid[1] + (factor * (y - this.centroid[1])) / prevFactor;
+      let newX =
+        this.centroid[0] + (factor * (x - this.centroid[0])) / prevFactor;
+      let newY =
+        this.centroid[1] + (factor * (y - this.centroid[1])) / prevFactor;
       this.vertices[index] = [newX, newY];
     });
   }
@@ -254,8 +266,11 @@ class Rectangle extends Shape {
   rotateShape(angle) {
     let cos = Math.cos(angle);
     let sin = Math.sin(angle);
-    let rotationMatrix = [[cos, sin * (-1)], [sin, cos]];
-    
+    let rotationMatrix = [
+      [cos, sin * -1],
+      [sin, cos],
+    ];
+
     this.vertices.forEach((v, index) => {
       // Rotate the shape like a wheel
       let [x, y] = v;
@@ -295,7 +310,7 @@ class Rectangle extends Shape {
 
     renderVertex(program, flattenMatrix(this.vertices), 2);
     renderColor(program, flattenMatrix(this.colors), 4);
-    
+
     for (let i = 0; i < this.vertices.length; i += 4) {
       gl.drawArrays(gl.TRIANGLE_STRIP, i, 4);
     }
@@ -321,7 +336,10 @@ class Polygon extends Shape {
     for (let i = 0; i < 2; i++) {
       this.vertices.push(convertToWGLCoordinate(canvas, x, y));
     }
-    this.colors = [[0, 0, 0, 1]];
+    this.colors = [
+      [0, 0, 0, 1],
+      [0, 0, 0, 1],
+    ];
   }
 
   translate(x, y) {}
@@ -331,7 +349,7 @@ class Polygon extends Shape {
   rotateShape(angle) {}
 
   shearXShape(factor, prevFactor) {}
-  
+
   shearYShape(factor, prevFactor) {}
 
   renderShape(program) {
@@ -359,10 +377,12 @@ class Polygon extends Shape {
 
   addVertex(x, y) {
     this.vertices.push(convertToWGLCoordinate(canvas, x, y));
+    this.colors.push([0, 0, 0, 1]);
   }
 
   removeLastVertex() {
     this.vertices.pop();
+    this.colors.pop();
   }
 
   updateLastVertexPosition(x, y) {
