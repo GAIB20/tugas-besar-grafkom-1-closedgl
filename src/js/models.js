@@ -335,11 +335,10 @@ class Polygon extends Shape {
     // start as line
     for (let i = 0; i < 2; i++) {
       this.vertices.push(convertToWGLCoordinate(canvas, x, y));
-    }
-    this.colors = [
-      [0, 0, 0, 1],
-      [0, 0, 0, 1],
-    ];
+      this.colors.push([0, 0, 0, 1]);    }
+
+    // flags to indicate if polygon is still in drawing mode (initialization)
+    this.isAddingVertex = true;
   }
 
   translate(x, y) {}
