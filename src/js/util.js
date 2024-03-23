@@ -133,11 +133,6 @@ const polygonStopDrawing = (currShapes, shapeType) => {
 
   const len = currShapes[SHAPE.POLYGON].length;
   currShapes[SHAPE.POLYGON][len - 1].stopDrawing();
-
-  if (currShapes[SHAPE.POLYGON][len - 1].vertices.length <= 2) {
-    // if polygon only have 2 vertices, remove from shapes list
-    currShapes[SHAPE.POLYGON].pop();
-  }
 };
 
 /**

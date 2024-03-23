@@ -358,7 +358,7 @@ class Polygon extends Shape {
     renderVertex(program, flattenMatrix(this.vertices), 2);
     renderColor(program, flattenMatrix(this.colors), 4);
 
-    if (this.isAddingVertex) {
+    if (this.isAddingVertex || this.vertices.length <= 2) {
       gl.drawArrays(gl.LINE_STRIP, 0, this.vertices.length);
     } else {
       gl.drawArrays(gl.TRIANGLE_FAN, 0, this.vertices.length);
