@@ -13,8 +13,8 @@ const SHAPE_CLASSES = {
   line: Line,
   square: Square,
   rectangle: Rectangle,
-  polygon: Polygon
-}
+  polygon: Polygon,
+};
 
 /**
  * ====================================================
@@ -93,9 +93,16 @@ drawLineBtn.addEventListener("click", () => {
   if (!isDrawing && !isEditing) {
     currentSelectedShape = SHAPE.LINE;
     isDrawing = true;
-    alert("You can start drawing now");
+    alert("You can start drawing line");
+    drawLineBtn.classList.add("button-hovered");
   } else {
-    alert("Click finish drawing before starting another one");
+    if (isDrawing && currentSelectedShape === SHAPE.LINE && !isEditing) {
+      isDrawing = false;
+      alert("Finished drawing line");
+      drawLineBtn.classList.remove("button-hovered");
+    } else {
+      alert("Click finish drawing before starting another one");
+    }
   }
 });
 
@@ -104,20 +111,34 @@ drawSquareBtn.addEventListener("click", () => {
   if (!isDrawing && !isEditing) {
     currentSelectedShape = SHAPE.SQUARE;
     isDrawing = true;
-    alert("You can start drawing now");
+    alert("You can start drawing square");
+    drawSquareBtn.classList.add("button-hovered");
   } else {
-    alert("Click finish drawing before starting another one");
+    if (isDrawing && currentSelectedShape === SHAPE.SQUARE && !isEditing) {
+      isDrawing = false;
+      alert("Finished drawing square");
+      drawSquareBtn.classList.remove("button-hovered");
+    } else {
+      alert("Click finish drawing before starting another one");
+    }
   }
 });
 
 let drawRectangleBtn = document.getElementById("rectangle");
 drawRectangleBtn.addEventListener("click", () => {
-  if (!isDrawing) {
+  if (!isDrawing && !isEditing) {
     currentSelectedShape = SHAPE.RECTANGLE;
     isDrawing = true;
-    alert("You can start drawing now");
+    alert("You can start drawing rectangle");
+    drawRectangleBtn.classList.add("button-hovered");
   } else {
-    alert("Click finish drawing before starting another one");
+    if (isDrawing && currentSelectedShape === SHAPE.RECTANGLE && !isEditing) {
+      isDrawing = false;
+      alert("Finished drawing rectangle");
+      drawRectangleBtn.classList.remove("button-hovered");
+    } else {
+      alert("Click finish drawing before starting another one");
+    }
   }
 });
 
@@ -126,21 +147,20 @@ drawPolygonBtn.addEventListener("click", () => {
   if (!isDrawing && !isEditing) {
     currentSelectedShape = SHAPE.POLYGON;
     isDrawing = true;
-    alert("You can start drawing now");
+    alert("You can start drawing polygon");
+    drawPolygonBtn.classList.add("button-hovered");
   } else {
-    alert("Click finish drawing before starting another one");
+    if (isDrawing && currentSelectedShape === SHAPE.POLYGON && !isEditing) {
+      isDrawing = false;
+      alert("Finished drawing polygon");
+      drawPolygonBtn.classList.remove("button-hovered");
+    } else {
+      alert("Click finish drawing before starting another one");
+    }
   }
 });
 
 // Action buttons
-let finishDrawBtn = document.getElementById("finish");
-finishDrawBtn.addEventListener("click", () => {
-  if (isDrawing) {
-    isDrawing = false;
-    alert("Finished drawing");
-  }
-});
-
 let editShapeButton = document.getElementById("edit");
 editShapeButton.addEventListener("click", () => {
   if (!isDrawing && !isEditing) {
@@ -159,11 +179,11 @@ editShapeButton.addEventListener("click", () => {
   document.getElementById("rotate").value = "0";
   let shearXSlider = document.getElementById("shear-x");
   if (shearXSlider) {
-    shearXSlider.value = "0"
+    shearXSlider.value = "0";
   }
   let shearYSlider = document.getElementById("shear-y");
   if (shearYSlider) {
-    shearYSlider.value = "0"
+    shearYSlider.value = "0";
   }
   editObject(shapes);
 });
@@ -308,9 +328,9 @@ const clearShapes = () => {
 
 const loadShapes = (jsonObj) => {
   clearShapes();
-  Object.keys(jsonObj).forEach(shapeType => {
-    jsonObj[shapeType].forEach(item => {
-      let obj = new SHAPE_CLASSES[shapeType] ;
+  Object.keys(jsonObj).forEach((shapeType) => {
+    jsonObj[shapeType].forEach((item) => {
+      let obj = new SHAPE_CLASSES[shapeType]();
       obj.copy(item);
       shapes[shapeType].push(obj);
       listVertices(shapes);

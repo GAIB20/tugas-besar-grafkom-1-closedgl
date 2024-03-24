@@ -1,33 +1,37 @@
 .button-img {
-    width: 50px;
+  width: 50px;
 }
 
 .button-img:hover {
-    background-color: rgb(163, 231, 245);
+  background-color: rgb(163, 231, 245);
+}
+
+.button-hovered {
+  background-color: rgb(163, 231, 245);
 }
 
 .slider {
-    -webkit-appearance: none;
-    width: 100%;
-    height: 5px;
-    border-radius: 5px;  
-    background: #ffffff;
-  }
-  
-.slider::-webkit-slider-thumb {
-    -webkit-appearance: none;
-    appearance: none;
-    width: 10px;
-    height: 10px;
-    border-radius: 50%; 
-    background: #2c89fa;
-    cursor: pointer;
+  -webkit-appearance: none;
+  width: 100%;
+  height: 5px;
+  border-radius: 5px;
+  background: #ffffff;
 }
-  
+
+.slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #2c89fa;
+  cursor: pointer;
+}
+
 .slider::-moz-range-thumb {
-    width: 10px;
-    height: 10px;
-    border-radius: 50%;
-    background: #2c89fa;
-    cursor: pointer;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #2c89fa;
+  cursor: pointer;
 }
