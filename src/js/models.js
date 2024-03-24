@@ -228,6 +228,11 @@ class Polygon extends Shape {
     }
   }
 
+  copy(obj) {
+    super.copy(obj);
+    this.isAddingVertex = obj.isAddingVertex;
+  }
+
   stopDrawing() {
     this.isAddingVertex = false;
     this.recalculatePolygon();
