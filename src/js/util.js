@@ -589,7 +589,6 @@ const convexHull = (vertexList) => {
   vertices.sort((a, b) => a[0] <= b[0] && a[1] <= b[1]);
 
   let p0 = vertices[0];
-  console.log(vertices);
 
   vertices.sort((a, b) => {
     let o = crossProduct(p0, a, b);
@@ -601,7 +600,6 @@ const convexHull = (vertexList) => {
     }
     return o > 0;
   });
-  console.log(vertices);
 
   let result_chain = [];
   for (let i = 0; i < vertices.length; i++) {
