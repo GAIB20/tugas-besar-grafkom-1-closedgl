@@ -37,38 +37,6 @@ class Shape {
     });
   }
 
-  updateLastVertexPosition(x, y) {}
-
-  renderShape(program) {} // render shape using GL
-
-  /**
-   * Set colors of each vertices of the shape
-   * @param vertexIndex
-   * @param rgbHex
-   */
-  setColor(vertexIndex, rgbHex) {
-    const { r, g, b } = parseRGB(rgbHex);
-    this.colors[vertexIndex] = [r, g, b, 1];
-  }
-
-  /**
-   * Set the center of the shape
-   */
-  setCentroid() {
-    this.centroid = calculateCentroid(this.vertices);
-  }
-}
-
-class Line extends Shape {
-  constructor(x, y) {
-    super();
-
-    for (let i = 0; i < 2; i++) {
-      this.vertices.push(convertToWGLCoordinate(canvas, x, y));
-      this.colors.push([0, 0, 0, 1]);
-    }
-  }
-
   rotateShape(angle) {
     let cos = Math.cos(angle);
     let sin = Math.sin(angle);
@@ -109,6 +77,38 @@ class Line extends Shape {
       let newY = y + relativeFactor * x;
       this.vertices[index] = [x, newY];
     });
+  }
+
+  updateLastVertexPosition(x, y) {}
+
+  renderShape(program) {} // render shape using GL
+
+  /**
+   * Set colors of each vertices of the shape
+   * @param vertexIndex
+   * @param rgbHex
+   */
+  setColor(vertexIndex, rgbHex) {
+    const { r, g, b } = parseRGB(rgbHex);
+    this.colors[vertexIndex] = [r, g, b, 1];
+  }
+
+  /**
+   * Set the center of the shape
+   */
+  setCentroid() {
+    this.centroid = calculateCentroid(this.vertices);
+  }
+}
+
+class Line extends Shape {
+  constructor(x, y) {
+    super();
+
+    for (let i = 0; i < 2; i++) {
+      this.vertices.push(convertToWGLCoordinate(canvas, x, y));
+      this.colors.push([0, 0, 0, 1]);
+    }
   }
 
   renderShape(program) {
@@ -153,48 +153,6 @@ class Square extends Shape {
     this.vertices.push(..._vertices);
   }
 
-  rotateShape(angle) {
-    let cos = Math.cos(angle);
-    let sin = Math.sin(angle);
-    let rotationMatrix = [
-      [cos, sin * -1],
-      [sin, cos],
-    ];
-
-    this.vertices.forEach((v, index) => {
-      // Rotate the shape like a wheel
-      let [x, y] = v;
-      x -= this.centroid[0];
-      y -= this.centroid[1];
-      let newX = x * rotationMatrix[0][0] + y * rotationMatrix[0][1];
-      let newY = x * rotationMatrix[1][0] + y * rotationMatrix[1][1];
-      newX += this.centroid[0];
-      newY += this.centroid[1];
-
-      this.vertices[index] = [newX, newY];
-    });
-  }
-
-  shearXShape(factor, prevFactor) {
-    let relativeFactor = factor - prevFactor;
-
-    this.vertices.forEach((v, index) => {
-      let [x, y] = v;
-      let newX = x + relativeFactor * y;
-      this.vertices[index] = [newX, y];
-    });
-  }
-
-  shearYShape(factor, prevFactor) {
-    let relativeFactor = factor - prevFactor;
-
-    this.vertices.forEach((v, index) => {
-      let [x, y] = v;
-      let newY = y + relativeFactor * x;
-      this.vertices[index] = [x, newY];
-    });
-  }
-
   renderShape(program) {
     this.setCentroid();
 
@@ -221,48 +179,6 @@ class Rectangle extends Shape {
     }
 
     this.colors.push(..._colors);
-  }
-
-  rotateShape(angle) {
-    let cos = Math.cos(angle);
-    let sin = Math.sin(angle);
-    let rotationMatrix = [
-      [cos, sin * -1],
-      [sin, cos],
-    ];
-
-    this.vertices.forEach((v, index) => {
-      // Rotate the shape like a wheel
-      let [x, y] = v;
-      x -= this.centroid[0];
-      y -= this.centroid[1];
-      let newX = x * rotationMatrix[0][0] + y * rotationMatrix[0][1];
-      let newY = x * rotationMatrix[1][0] + y * rotationMatrix[1][1];
-      newX += this.centroid[0];
-      newY += this.centroid[1];
-
-      this.vertices[index] = [newX, newY];
-    });
-  }
-
-  shearXShape(factor, prevFactor) {
-    let relativeFactor = factor - prevFactor;
-
-    this.vertices.forEach((v, index) => {
-      let [x, y] = v;
-      let newX = x + relativeFactor * y;
-      this.vertices[index] = [newX, y];
-    });
-  }
-
-  shearYShape(factor, prevFactor) {
-    let relativeFactor = factor - prevFactor;
-
-    this.vertices.forEach((v, index) => {
-      let [x, y] = v;
-      let newY = y + relativeFactor * x;
-      this.vertices[index] = [x, newY];
-    });
   }
 
   renderShape(program) {
@@ -298,12 +214,6 @@ class Polygon extends Shape {
     // flags to indicate if polygon is still in drawing mode (initialization)
     this.isAddingVertex = true;
   }
-
-  rotateShape(angle) {}
-
-  shearXShape(factor, prevFactor) {}
-
-  shearYShape(factor, prevFactor) {}
 
   renderShape(program) {
     this.setCentroid();
