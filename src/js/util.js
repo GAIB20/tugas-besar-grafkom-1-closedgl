@@ -110,6 +110,7 @@ const onEnterAddPolygonVertex = (currShapes, shapeType, x, y) => {
   if (currShapes[SHAPE.POLYGON][len - 1].isAddingVertex) {
     currShapes[SHAPE.POLYGON][len - 1].addVertex(wglWidth, wglHeight);
   }
+  listVertices(currShapes);
 };
 
 const onBackspaceRemovePolygonVertex = (currShapes, shapeType) => {
@@ -124,6 +125,7 @@ const onBackspaceRemovePolygonVertex = (currShapes, shapeType) => {
   ) {
     currShapes[SHAPE.POLYGON][len - 1].removeLastVertex();
   }
+  listVertices(currShapes);
 };
 
 const polygonStopDrawing = (currShapes, shapeType) => {
