@@ -220,7 +220,6 @@ class Polygon extends Shape {
 
     renderVertex(program, flattenMatrix(this.vertices), 2);
     renderColor(program, flattenMatrix(this.colors), 4);
-
     if (this.isAddingVertex || this.vertices.length <= 2) {
       gl.drawArrays(gl.LINE_STRIP, 0, this.vertices.length);
     } else {
@@ -234,13 +233,19 @@ class Polygon extends Shape {
   }
 
   stopDrawing() {
-    this.isAddingVertex = false;
     this.recalculatePolygon();
+    this.isAddingVertex = false;
   }
 
   recalculatePolygon() {
-    // todo: recalculate convex hull
+    this.vertices = convexHull(this.vertices);
     this.setCentroid();
+    if (this.vertices.length != this.colors.length) {
+      this.colors = [];
+      for (let index = 0; index < this.vertices.length; index++) {
+        this.colors.push([0, 0, 0, 1]);
+      }
+    }
   }
 
   addVertex(x, y) {

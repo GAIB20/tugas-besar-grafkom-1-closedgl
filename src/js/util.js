@@ -509,6 +509,7 @@ const addPointToPolygons = (x, y, shapes) => {
     let polygon = shapes["polygon"].find((shape) => shape.id === polygonId);
 
     polygon.addVertex(x, y);
+    polygon.recalculatePolygon();
   });
 };
 
@@ -551,6 +552,7 @@ const deletePointsPolygon = (shapes) => {
     vertIndices.reverse();
 
     vertIndices.forEach((idx) => poly.removeVertexAtIndex(idx));
+    poly.recalculatePolygon();
   }
 };
 
@@ -563,4 +565,63 @@ const resetAllCheckboxes = () => {
       checkbox.checked = false;
     }
   }
+};
+
+/**
+ * Convex Hull Calculations
+ */
+const crossProduct = (pointA, pointB, pointC) => {
+  // cross product of AB x AC
+  const [aX, aY] = pointA;
+  const [bX, bY] = pointB;
+  const [cX, cY] = pointC;
+
+  let v = aX * (bY - cY) + bX * (cY - aY) + cX * (aY - bY);
+  return v;
+};
+const convexHull = (vertexList) => {
+  if (vertexList.length <= 2) {
+    return vertexList;
+  }
+
+  let vertices = [...vertexList];
+
+  vertices.sort((a, b) => a[0] <= b[0] && a[1] <= b[1]);
+
+  let p0 = vertices[0];
+  console.log(vertices);
+
+  vertices.sort((a, b) => {
+    let o = crossProduct(p0, a, b);
+    if (o == 0) {
+      return (
+        Math.pow(p0[0] - a[0], 2) + Math.pow(p0[1] - a[1], 2) <
+        Math.pow(p0[0] - b[0], 2) + Math.pow(p0[1] - b[1], 2)
+      );
+    }
+    return o > 0;
+  });
+  console.log(vertices);
+
+  let result_chain = [];
+  for (let i = 0; i < vertices.length; i++) {
+    let size = result_chain.length;
+    while (size > 1) {
+      if (
+        crossProduct(
+          result_chain[size - 2],
+          result_chain[size - 1],
+          vertices[i]
+        ) <= 0
+      ) {
+        break;
+      }
+
+      result_chain.pop();
+      size = result_chain.length;
+    }
+    result_chain.push(vertices[i]);
+  }
+
+  return result_chain;
 };
