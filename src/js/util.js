@@ -442,6 +442,21 @@ const editObject = (shapes) => {
   });
 };
 
+const isEmptyCheckbox = () => {
+  let container = document.getElementById("shape-data-container");
+  let checkboxes = container.getElementsByTagName("input");
+
+  let isEmpty = true;
+
+  for (let checkbox of checkboxes) {
+    if (checkbox.checked) {
+      isEmpty = false;
+      break;
+    }
+  }
+  return isEmpty;
+};
+
 const resetAllCheckboxes = () => {
   let container = document.getElementById("shape-data-container");
   let checkboxes = container.getElementsByTagName("input");

@@ -100,8 +100,10 @@ drawLineBtn.addEventListener("click", () => {
       isDrawing = false;
       alert("Finished drawing line");
       drawLineBtn.classList.remove("button-hovered");
+    } else if (isEditing) {
+      alert("Disable edit mode before drawing");
     } else {
-      alert("Click finish drawing before starting another one");
+      alert("Unselect current shape before drawing another shape");
     }
   }
 });
@@ -118,8 +120,10 @@ drawSquareBtn.addEventListener("click", () => {
       isDrawing = false;
       alert("Finished drawing square");
       drawSquareBtn.classList.remove("button-hovered");
+    } else if (isEditing) {
+      alert("Disable edit mode before drawing");
     } else {
-      alert("Click finish drawing before starting another one");
+      alert("Unselect current shape before drawing another shape");
     }
   }
 });
@@ -136,8 +140,10 @@ drawRectangleBtn.addEventListener("click", () => {
       isDrawing = false;
       alert("Finished drawing rectangle");
       drawRectangleBtn.classList.remove("button-hovered");
+    } else if (isEditing) {
+      alert("Disable edit mode before drawing");
     } else {
-      alert("Click finish drawing before starting another one");
+      alert("Unselect current shape before drawing another shape");
     }
   }
 });
@@ -154,8 +160,10 @@ drawPolygonBtn.addEventListener("click", () => {
       isDrawing = false;
       alert("Finished drawing polygon");
       drawPolygonBtn.classList.remove("button-hovered");
+    } else if (isEditing) {
+      alert("Disable edit mode before drawing");
     } else {
-      alert("Click finish drawing before starting another one");
+      alert("Unselect current shape before drawing another shape");
     }
   }
 });
@@ -164,12 +172,22 @@ drawPolygonBtn.addEventListener("click", () => {
 let editShapeButton = document.getElementById("edit");
 editShapeButton.addEventListener("click", () => {
   if (!isDrawing && !isEditing) {
+    if (isEmptyCheckbox()) {
+      alert("Select vertices or shapes before editing");
+      return;
+    }
+
     isEditing = true;
     alert("You can start editing now!");
     editShapeButton.textContent = "Finish Edit";
   } else {
+    if (isDrawing) {
+      alert("Finish drawing before entering editing mode");
+    } else {
+      alert("Editing mode is disabled");
+    }
     isEditing = false;
-    alert("Editing mode is off");
+
     editShapeButton.textContent = "Edit";
     resetAllCheckboxes();
   }
