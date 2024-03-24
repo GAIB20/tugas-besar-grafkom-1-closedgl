@@ -22,6 +22,7 @@ const SHAPE_CLASSES = {
  */
 let isDrawing = false;
 let isEditing = false;
+let isAddingPolygonPoint = false;
 let shapeSize = 0;
 let currentSelectedShape = null;
 let isFocusingCanvas = false;
@@ -170,6 +171,8 @@ drawPolygonBtn.addEventListener("click", () => {
 
 // Action buttons
 let editShapeButton = document.getElementById("edit");
+let addPointBtn = document.getElementById("add-point");
+let removePointBtn = document.getElementById("remove-point");
 editShapeButton.addEventListener("click", () => {
   if (!isDrawing && !isEditing) {
     if (isEmptyCheckbox()) {
@@ -178,6 +181,10 @@ editShapeButton.addEventListener("click", () => {
     }
 
     isEditing = true;
+    if (isPolygonSelected()) {
+      addPointBtn.classList.remove("button-hidden");
+      removePointBtn.classList.remove("button-hidden");
+    }
     alert("You can start editing now!");
     editShapeButton.textContent = "Finish Edit";
   } else {
@@ -187,6 +194,9 @@ editShapeButton.addEventListener("click", () => {
       alert("Editing mode is disabled");
     }
     isEditing = false;
+
+    addPointBtn.classList.add("button-hidden");
+    removePointBtn.classList.add("button-hidden");
 
     editShapeButton.textContent = "Edit";
     resetAllCheckboxes();
@@ -204,6 +214,23 @@ editShapeButton.addEventListener("click", () => {
     shearYSlider.value = "0";
   }
   editObject(shapes);
+});
+
+addPointBtn.addEventListener("click", () => {
+  if (!isEditing) {
+    alert("Select edit mode first");
+    return;
+  }
+
+  if (!isAddingPolygonPoint) {
+    alert("Add polygon point by clicking on canvas");
+    addPointBtn.textContent = "Finish Adding Point";
+  } else {
+    alert("Finished adding polygon point");
+    addPointBtn.textContent = "Add Point";
+    listVertices(shapes);
+  }
+  isAddingPolygonPoint = !isAddingPolygonPoint;
 });
 
 let saveBtn = document.getElementById("save");
@@ -262,6 +289,10 @@ canvas.addEventListener("mousedown", (e) => {
 
     const { x, y } = getCursorPosition(canvas, e);
     drawShape(shapes, currentSelectedShape, x, y, shapeSize);
+  } else if (isEditing && isAddingPolygonPoint) {
+    isFocusingCanvas = true;
+    const { x, y } = getCursorPosition(canvas, e);
+    addPointToPolygons(x, y, shapes);
   }
 });
 

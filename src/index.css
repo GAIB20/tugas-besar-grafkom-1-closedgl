@@ -10,6 +10,10 @@
   background-color: rgb(163, 231, 245);
 }
 
+.button-hidden {
+  display: none;
+}
+
 .slider {
   -webkit-appearance: none;
   width: 100%;

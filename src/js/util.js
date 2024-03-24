@@ -457,6 +457,61 @@ const isEmptyCheckbox = () => {
   return isEmpty;
 };
 
+/**
+ * polygon utils
+ *
+ * used for editing polygon
+ */
+const isPolygonSelected = () => {
+  let container = document.getElementById("shape-data-container");
+
+  let checkboxes = container.getElementsByTagName("input");
+
+  let polygonChecked = false;
+
+  // Loop over each checkbox
+  for (let checkbox of checkboxes) {
+    if (checkbox.checked) {
+      // Extract the shape id, shape index, and vertex index from the checkbox id
+      let [shapeId, shapeName, _, __, vertexIndex] = checkbox.id.split("-");
+
+      // If the checkbox is for a vertex
+      if (shapeName === "Polygon") {
+        polygonChecked = true;
+        break;
+      }
+    }
+  }
+  return polygonChecked;
+};
+
+const addPointToPolygons = (x, y, shapes) => {
+  let container = document.getElementById("shape-data-container");
+
+  let checkboxes = container.getElementsByTagName("input");
+
+  let selectedPolygons = new Set();
+
+  // Loop over each checkbox
+  for (let checkbox of checkboxes) {
+    if (checkbox.checked) {
+      // Extract the shape id, shape index, and vertex index from the checkbox id
+      let [shapeId, shapeName, _, __, ___] = checkbox.id.split("-");
+
+      // If the checkbox is for a vertex
+      if (shapeName === "Polygon") {
+        selectedPolygons.add(shapeId);
+      }
+    }
+  }
+
+  selectedPolygons.forEach((polygonId) => {
+    let polygon = shapes["polygon"].find((shape) => shape.id == polygonId);
+
+    polygon.addVertex(x, y);
+  });
+};
+
 const resetAllCheckboxes = () => {
   let container = document.getElementById("shape-data-container");
   let checkboxes = container.getElementsByTagName("input");

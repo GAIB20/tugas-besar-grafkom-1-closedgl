@@ -255,6 +255,12 @@ class Polygon extends Shape {
     this.setCentroid();
   }
 
+  removeVertexAtIndex(index) {
+    this.vertices = this.vertices.splice(index, 1);
+    this.colors = this.colors.splice(index, 1);
+    this.setCentroid();
+  }
+
   updateLastVertexPosition(x, y) {
     let len = this.vertices.length;
     this.vertices[len - 1][0] = x;
