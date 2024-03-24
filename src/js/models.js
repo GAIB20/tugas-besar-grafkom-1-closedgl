@@ -256,8 +256,8 @@ class Polygon extends Shape {
   }
 
   removeVertexAtIndex(index) {
-    this.vertices = this.vertices.splice(index, 1);
-    this.colors = this.colors.splice(index, 1);
+    this.vertices.splice(index, 1);
+    this.colors.splice(index, 1);
     this.setCentroid();
   }
 

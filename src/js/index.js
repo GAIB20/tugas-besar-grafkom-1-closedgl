@@ -233,6 +233,16 @@ addPointBtn.addEventListener("click", () => {
   isAddingPolygonPoint = !isAddingPolygonPoint;
 });
 
+removePointBtn.addEventListener("click", () => {
+  if (!isEditing) {
+    alert("Select edit mode first");
+    return;
+  }
+
+  deletePointsPolygon(shapes);
+  listVertices(shapes);
+});
+
 let saveBtn = document.getElementById("save");
 saveBtn.addEventListener("click", () => {
   if (!isEditing && !isDrawing) {

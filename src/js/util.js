@@ -498,7 +498,7 @@ const addPointToPolygons = (x, y, shapes) => {
       // Extract the shape id, shape index, and vertex index from the checkbox id
       let [shapeId, shapeName, _, __, ___] = checkbox.id.split("-");
 
-      // If the checkbox is for a vertex
+      // If the checkbox is for a polygon
       if (shapeName === "Polygon") {
         selectedPolygons.add(shapeId);
       }
@@ -506,10 +506,52 @@ const addPointToPolygons = (x, y, shapes) => {
   }
 
   selectedPolygons.forEach((polygonId) => {
-    let polygon = shapes["polygon"].find((shape) => shape.id == polygonId);
+    let polygon = shapes["polygon"].find((shape) => shape.id === polygonId);
 
     polygon.addVertex(x, y);
   });
+};
+
+const deletePointsPolygon = (shapes) => {
+  let container = document.getElementById("shape-data-container");
+
+  let checkboxes = container.getElementsByTagName("input");
+
+  let removalIndex = {};
+
+  // Loop over each checkbox
+  for (let checkbox of checkboxes) {
+    if (checkbox.checked) {
+      // Extract the shape id, shape index, and vertex index from the checkbox id
+      let [shapeId, shapeName, _, __, vertexIndex] = checkbox.id.split("-");
+
+      // If the checkbox is for a vertex
+      if (shapeName === "Polygon") {
+        if (removalIndex[shapeId]) {
+          removalIndex[shapeId].push(vertexIndex);
+        } else {
+          removalIndex[shapeId] = [vertexIndex];
+        }
+      }
+    }
+  }
+
+  // remove polygon if vertex count is zero after deleting points
+  for (const [shapeId, vertIndices] of Object.entries(removalIndex)) {
+    let poly = shapes["polygon"].find((shape) => shape.id === shapeId);
+
+    if (poly.vertices.length == vertIndices.length) {
+      shapes["polygon"] = shapes["polygon"].filter(
+        (polygon) => polygon.id !== shapeId
+      );
+      continue;
+    }
+
+    if (shapes["polygon"]) vertIndices.sort();
+    vertIndices.reverse();
+
+    vertIndices.forEach((idx) => poly.removeVertexAtIndex(idx));
+  }
 };
 
 const resetAllCheckboxes = () => {
