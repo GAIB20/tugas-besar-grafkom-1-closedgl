@@ -130,10 +130,9 @@ class Line extends Shape {
 }
 
 class Square extends Shape {
-  constructor(x, y, size) {
+  constructor(x, y) {
     super();
 
-    // TODO: change this constant
     const SQ_DEFAULT_SIZE = 100;
 
     let _vertices = [];

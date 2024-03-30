@@ -23,7 +23,6 @@ const SHAPE_CLASSES = {
 let isDrawing = false;
 let isEditing = false;
 let isAddingPolygonPoint = false;
-let shapeSize = 0;
 let currentSelectedShape = null;
 let isFocusingCanvas = false;
 let keyPressed = false;
@@ -298,7 +297,7 @@ canvas.addEventListener("mousedown", (e) => {
     isFocusingCanvas = true;
 
     const { x, y } = getCursorPosition(canvas, e);
-    drawShape(shapes, currentSelectedShape, x, y, shapeSize);
+    drawShape(shapes, currentSelectedShape, x, y);
   } else if (isEditing && isAddingPolygonPoint) {
     isFocusingCanvas = true;
     const { x, y } = getCursorPosition(canvas, e);

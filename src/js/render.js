@@ -83,7 +83,7 @@ const renderColor = (program, arrData = [], arrSize = 3) => {
 /**
  * Draw a new shape based on given shapeType and push it to currShapes
  * */
-const drawShape = (currShapes, shapeType, x, y, shapeSize = 0) => {
+const drawShape = (currShapes, shapeType, x, y) => {
   switch (shapeType) {
     case SHAPE.LINE:
       currShapes.line.push(new Line(x, y));
@@ -91,7 +91,7 @@ const drawShape = (currShapes, shapeType, x, y, shapeSize = 0) => {
       break;
 
     case SHAPE.SQUARE:
-      currShapes.square.push(new Square(x, y, shapeSize));
+      currShapes.square.push(new Square(x, y));
       break;
 
     case SHAPE.RECTANGLE:
